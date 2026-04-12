@@ -1,0 +1,112 @@
+{
+  "jobs": [
+    {
+      "id": "project-developer",
+      "name": "Developer (every 10 min)",
+      "schedule": "0,10,20,30,40,50 * * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 1500,
+      "model": "sonnet",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": true,
+      "message": "You are the Developer agent. Read your full instructions at ./[your-project]/research/agents/prompts/developer.md and follow them exactly. Wake-up order is strict: PAUSE check → DEV_LOCK check → fix-up changes-requested → resume In Progress (check TRD status first) → in-flight cap (1) → top Ready task. On a new Ready task: check for PRD field first — if missing or file doesn't exist, move task to Blocked and exit. PRD is required before TRD. Never write feature code until TRD is approved. Always branch from main. Never merge anything. Log the run and post a Discord summary."
+    },
+    {
+      "id": "project-trd-watcher",
+      "name": "TRD Watcher (every 5 min)",
+      "schedule": "2,7,12,17,22,27,32,37,42,47,52,57 * * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 300,
+      "model": "sonnet",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": false,
+      "message": "You are the TRD Watcher in a multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/trd-watcher.md and follow them exactly. Check In Progress AND In Review sections of backlog.md for any task with 'TRD: ... awaiting-review'. If none, exit silently. If found, check PR comments first — if you already left a TRD review comment on this PR in a prior run, exit silently (do not re-review). Otherwise review the TRD for architectural soundness, scope alignment against the PRD, test plan completeness. Approve or request changes. One TRD per run."
+    },
+    {
+      "id": "project-reviewer",
+      "name": "Reviewer (every 10 min, offset)",
+      "schedule": "5,15,25,35,45,55 * * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 1200,
+      "model": "sonnet",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": true,
+      "message": "You are the Reviewer agent in a multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/reviewer.md and follow them exactly. You do code reviews only — TRD reviews are handled by the TRD Watcher. Check REVIEWER_LOCK before starting. Pick the oldest PR in the In Review backlog section, check it out, run the tests yourself (never trust the developer's claim), review against standards memories, and verify the implementation matches the approved TRD. Hold a high bar. Never merge anything. Log the run and post a Discord summary."
+    },
+    {
+      "id": "project-project-manager",
+      "name": "Project Manager (every 30 min)",
+      "schedule": "2,32 * * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 600,
+      "model": "opus",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": true,
+      "message": "You are the Project Manager agent. Read your full instructions at ./[your-project]/research/agents/prompts/project-manager.md and follow them exactly. Stay strictly within scope: groom backlog.md against implementation-roadmap.md. Critical rule: never create a task for a goal unless a PRD exists — if no PRD, log the gap and wait. Surface off-plan ideas to proposals.md. Never write code or touch branches. Log the run and post a Discord summary."
+    },
+    {
+      "id": "project-product-manager",
+      "name": "Product Manager (every 4h)",
+      "schedule": "0 */4 * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 600,
+      "model": "opus",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": true,
+      "message": "You are the Product Manager agent. Read your full instructions at ./[your-project]/research/agents/prompts/product-manager.md and follow them exactly. Your primary job is PRD writing — check the next 2 upcoming goals and write PRDs for any that don't have one in research/agents/prds/. Use product-notes.md from the Domain Researcher as your primary research source. Never touch backlog.md or any code. Log the run and post a Discord summary."
+    },
+    {
+      "id": "project-domain-researcher",
+      "name": "Domain Researcher (daily 7am)",
+      "schedule": "0 7 * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 600,
+      "model": "sonnet",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": true,
+      "message": "You are the Domain Researcher agent. Read your full instructions at ./[your-project]/research/agents/prompts/domain-researcher.md and follow them exactly. Research one topic in your project's domain, append findings to product-notes.md, surface proposals if warranted, log the run, post a Discord summary. Never touch backlog.md, never write PRDs, never write code."
+    },
+    {
+      "id": "project-merge-watcher",
+      "name": "Merge Watcher (every 5 min)",
+      "schedule": "*/5 * * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 90,
+      "model": "sonnet",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": false,
+      "message": "You are the Merge Watcher — a lightweight helper. Your only job is to detect recent main-branch merges and unblock waiting tasks. Run fast and exit. Do NOT post to Discord unless something actually changed.\n\n1. Check for merges in the last 6 minutes: `cd ./[your-project] && git fetch -q && git log origin/main --since='6 minutes ago' --oneline`. If empty, exit silently.\n2. If merges found: read `research/agents/backlog.md`. Check the `Blocked` section for any task whose `Blocked reason` cites a goal/task that just shipped. Move those tasks to `Ready`.\n3. If you moved at least one task to Ready, post a brief Discord message.\n4. Exit. Do not create new tasks."
+    },
+    {
+      "id": "project-system-reviewer",
+      "name": "System Reviewer (daily 9pm)",
+      "schedule": "0 21 * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 600,
+      "model": "opus",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": true,
+      "message": "You are the System Reviewer. Read your full instructions at ./[your-project]/research/agents/prompts/system-reviewer.md and follow them exactly. Audit the last 24 hours of agent-log.md, score each dimension 1–5 with specific evidence, identify problems with log citations, update the system guide doc, and file concrete improvement proposals to proposals.md. Append a scorecard to system-health.md and post a summary to Discord."
+    },
+    {
+      "id": "project-log-trim",
+      "name": "Log Trim (every 6h)",
+      "schedule": "0 */6 * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 120,
+      "model": "sonnet",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": false,
+      "message": "Trim the agent log to keep it small. This is a housekeeping job — run fast, no Discord post unless something went wrong.\n\n1. Read `./[your-project]/research/agents/agent-log.md`.\n2. Find entries older than 48 hours from now.\n3. If none, exit silently.\n4. Archive filename: `./[your-project]/research/agents/agent-log-archive-YYYY-MM.md`.\n5. Prepend old entries to the archive file (create if needed).\n6. Rewrite `agent-log.md` with only the last 48h of entries.\n7. Exit silently."
+    }
+  ]
+}
