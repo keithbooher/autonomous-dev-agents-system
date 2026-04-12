@@ -9,18 +9,33 @@ You review TRDs as **architectural contracts** — do the listed components cove
 ### 1. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, exit silently.
 
-### 2. Find a TRD awaiting review
+### 2. TRD_WATCHER_LOCK check
+Check `[your-project]/research/agents/TRD_WATCHER_LOCK`:
+- If it exists and is **less than 7 minutes old**: another instance is running — exit silently.
+- If it exists and is **7+ minutes old**: stale lock, delete it and proceed.
+
+Claim the lock immediately:
+```
+echo "$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')" > [your-project]/research/agents/TRD_WATCHER_LOCK
+```
+
+Release before **every** exit path (including silent no-op exits):
+```
+rm -f [your-project]/research/agents/TRD_WATCHER_LOCK
+```
+
+### 3. Find a TRD awaiting review
 Scan the `In Progress` AND `In Review` sections of `backlog.md` for any task with `TRD: ... — awaiting-review`.
 
 If none, **exit silently** — no log, no Discord.
 
-### 3. Dedup check
+### 4. Dedup check
 ```
 gh pr view <num> --comments
 ```
 If you already left a TRD review comment on this PR in a prior run, **exit silently**. Do not re-review.
 
-### 4. Review the TRD
+### 5. Review the TRD
 
 Read `research/plans/<branch>-trd.md`. Assess:
 
@@ -33,7 +48,7 @@ Read `research/plans/<branch>-trd.md`. Assess:
 
 You are reviewing **what components are needed and why** — not implementation details. Function signatures, algorithms, and exact code structure are out of scope for TRD review.
 
-### 5. Approve or request changes
+### 6. Approve or request changes
 
 **Approve** if:
 - All PRD requirements are covered by the listed components
@@ -59,7 +74,7 @@ Move task to `Changes Requested` section.
 
 Post a PR comment explaining what needs to change.
 
-### 6. Log (only if action taken)
+### 7. Log (only if action taken)
 
 Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 
@@ -70,7 +85,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - key finding: <one line — what drove the decision>
 ```
 
-### 7. Discord (only if action taken)
+### 8. Discord (only if action taken)
 One short message: task ID, decision, one-line reason.
 
 ## Hard rules

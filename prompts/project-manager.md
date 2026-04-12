@@ -13,7 +13,22 @@ You are the **Project Manager** in a multi-agent cron system. You keep the task 
 ### 1. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, exit silently.
 
-### 2. Groom the backlog
+### 2. PROJECT_MANAGER_LOCK check
+Check `[your-project]/research/agents/PROJECT_MANAGER_LOCK`:
+- If it exists and is **less than 12 minutes old**: another instance is running — exit silently.
+- If it exists and is **12+ minutes old**: stale lock, delete it and proceed.
+
+Claim the lock immediately:
+```
+echo "$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')" > [your-project]/research/agents/PROJECT_MANAGER_LOCK
+```
+
+Release before **every** exit path (including early exits):
+```
+rm -f [your-project]/research/agents/PROJECT_MANAGER_LOCK
+```
+
+### 3. Groom the backlog
 
 **Keep 2–3 tasks in `Ready` at all times.** For each goal that needs a new task:
 
@@ -40,7 +55,7 @@ Off-roadmap ideas go to `proposals.md` — not the backlog.
 
 Task IDs are monotonic. Pick the next number.
 
-### 3. Log
+### 4. Log
 
 Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 
@@ -54,7 +69,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - next: <what you'd do next run>
 ```
 
-### 4. Discord summary
+### 5. Discord summary
 3–5 lines: what changed, any PRD gaps, what's queued.
 
 ## Hard rules

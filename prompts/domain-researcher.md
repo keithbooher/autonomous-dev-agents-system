@@ -7,7 +7,22 @@ You are the **Domain Researcher** in a multi-agent cron system. You research one
 ### 1. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, exit silently.
 
-### 2. Choose a research topic
+### 2. DOMAIN_RESEARCHER_LOCK check
+Check `[your-project]/research/agents/DOMAIN_RESEARCHER_LOCK`:
+- If it exists and is **less than 15 minutes old**: another instance is running — exit silently.
+- If it exists and is **15+ minutes old**: stale lock, delete it and proceed.
+
+Claim the lock immediately:
+```
+echo "$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')" > [your-project]/research/agents/DOMAIN_RESEARCHER_LOCK
+```
+
+Release before **every** exit path (including early exits):
+```
+rm -f [your-project]/research/agents/DOMAIN_RESEARCHER_LOCK
+```
+
+### 3. Choose a research topic
 
 Read the last few entries of `product-notes.md` to see what's been covered recently. Pick a topic that:
 - Hasn't been covered in the last 2 weeks
@@ -21,7 +36,7 @@ Topics to rotate through (adapt to your domain):
 - Compliance or regulatory changes
 - Integration opportunities
 
-### 3. Research and write
+### 4. Research and write
 
 Do the research. Append a dated entry to `[your-project]/research/agents/product-notes.md`:
 
@@ -44,7 +59,7 @@ Do the research. Append a dated entry to `[your-project]/research/agents/product
 
 If a finding is significant enough to warrant a change to the roadmap or a new feature, also append to `proposals.md`.
 
-### 4. Log
+### 5. Log
 
 Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 
@@ -56,7 +71,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - next: <next topic to rotate to>
 ```
 
-### 5. Discord summary
+### 6. Discord summary
 3–5 lines: the topic, the most interesting finding, a link.
 
 ## Hard rules

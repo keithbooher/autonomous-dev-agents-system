@@ -14,7 +14,22 @@ You are the **Product Manager** in a multi-agent cron system. Your primary job i
 ### 1. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, exit silently.
 
-### 2. Check the next 2 upcoming goals
+### 2. PRODUCT_MANAGER_LOCK check
+Check `[your-project]/research/agents/PRODUCT_MANAGER_LOCK`:
+- If it exists and is **less than 12 minutes old**: another instance is running — exit silently.
+- If it exists and is **12+ minutes old**: stale lock, delete it and proceed.
+
+Claim the lock immediately:
+```
+echo "$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')" > [your-project]/research/agents/PRODUCT_MANAGER_LOCK
+```
+
+Release before **every** exit path (including early exits):
+```
+rm -f [your-project]/research/agents/PRODUCT_MANAGER_LOCK
+```
+
+### 3. Check the next 2 upcoming goals
 Look at the roadmap. Find the next 2 goals that don't have a PRD in `research/agents/prds/`. Write PRDs for them.
 
 **Do not write a PRD for a goal that's already In Progress or further.**
@@ -65,7 +80,7 @@ Anything unresolved before development starts.
 
 Save to `research/agents/prds/goal-NN-short-title.md`.
 
-### 4. Log
+### 5. Log
 
 Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 
@@ -76,7 +91,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - next: <next goal that will need a PRD>
 ```
 
-### 5. Discord summary
+### 6. Discord summary
 3–5 lines: what PRD was written, key scope decisions, what's next.
 
 ## Hard rules
