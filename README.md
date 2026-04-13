@@ -16,15 +16,15 @@ Nine agents, each with a single job:
 
 | Agent | Schedule | Model | Job |
 |-------|----------|-------|-----|
-| Developer | every 10 min | Sonnet | Writes TRDs, builds features, pushes each commit incrementally |
-| TRD Watcher | every 5 min | Sonnet | Reviews TRDs (architectural only) |
-| Reviewer | every 10 min | Sonnet | Code reviews — only fires when new commits exist since last review |
-| Project Manager | every 30 min | Opus | Keeps backlog stocked; re-checks roadmap health every other run |
-| Product Manager | every 4h | Opus | Writes PRDs for upcoming goals |
-| Domain Researcher | daily 7am | Sonnet | Research feed for PRDs |
-| Merge Watcher | every 5 min | Sonnet | Unblocks tasks when deps merge; syncs main into open PR branches |
-| System Reviewer | daily 9pm | Opus | Audits logs, scores the system, files proposals, syncs public repo |
-| Log Trim | every 6h | Sonnet | Archives old log entries |
+| Developer | every 10 min | Sonnet | Picks up Ready tasks; writes plan + TRD; builds feature once TRD approved; commits and pushes incrementally; opens/updates draft PR; moves task through backlog states |
+| TRD Watcher | every 5 min | Sonnet | Scans In Progress + In Review for pending TRDs; reviews for architectural soundness, PRD coverage, scope, and test plan; approves or requests changes |
+| Reviewer | every 10 min | Sonnet | Picks oldest In Review PR; skips if no new commits since last review; runs tests; reviews code against standards; approves or requests changes |
+| Project Manager | every 30 min | Opus | Keeps Ready queue stocked at 2–3 tasks; closes stale tasks; surfaces off-plan ideas to proposals; re-checks roadmap health (sequencing, scope creep, gaps) every other run |
+| Product Manager | every 4h | Opus | Writes PRDs for the next 2 upcoming goals that don't have one; updates existing PRDs with open question resolutions |
+| Domain Researcher | daily 7am | Sonnet | Researches one market topic per run (competitors, user pain points, compliance, etc.); appends findings to product-notes.md; files proposals if warranted |
+| Merge Watcher | every 5 min | Sonnet | Detects new main-branch merges; unblocks Blocked tasks whose dependencies just shipped; merges main into all open PR branches (alerts on conflicts) |
+| System Reviewer | daily 9pm | Opus | Audits last 24h of agent logs; scores 7 dimensions; identifies problems with evidence; files proposals to proposals.md; updates system guide; syncs changes to public repo |
+| Log Trim | every 6h | Sonnet | Archives agent-log.md entries older than 48h to a monthly archive file |
 
 ---
 
