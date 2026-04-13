@@ -73,6 +73,7 @@ Check the `In Progress` section of `backlog.md`. If a task is there, resume it:
   - **`— approved`**: proceed to build.
 - Read the plan file at `research/plans/<branch>.md`.
 - **Work until the full task scope is complete.** Commit each logical slice, and **push immediately after every commit** — do not batch and push at the end. Each push makes work visible on GitHub as it happens.
+- **Commit message convention:** intermediate commits use normal conventional commit format (`feat:`, `fix:`, etc.). The final commit of the run (all acceptance criteria met, all tests passing) is prefixed with `FINAL:` — e.g. `FINAL: feat(goal-N): feature complete`.
 - When done: `gh pr ready <num>`, move task from `In Progress` to `In Review`.
 - Release the lock, log, post Discord summary, **stop**.
 
