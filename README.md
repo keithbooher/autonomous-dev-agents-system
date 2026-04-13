@@ -16,14 +16,14 @@ Nine agents, each with a single job:
 
 | Agent | Schedule | Model | Job |
 |-------|----------|-------|-----|
-| Developer | every 10 min | Sonnet | Writes TRDs, builds features |
+| Developer | every 10 min | Sonnet | Writes TRDs, builds features, pushes each commit incrementally |
 | TRD Watcher | every 5 min | Sonnet | Reviews TRDs (architectural only) |
-| Reviewer | every 10 min | Sonnet | Code reviews |
-| Project Manager | every 30 min | Opus | Keeps backlog stocked |
+| Reviewer | every 10 min | Sonnet | Code reviews — only fires when new commits exist since last review |
+| Project Manager | every 30 min | Opus | Keeps backlog stocked; re-checks roadmap health every other run |
 | Product Manager | every 4h | Opus | Writes PRDs for upcoming goals |
 | Domain Researcher | daily 7am | Sonnet | Research feed for PRDs |
-| Merge Watcher | every 5 min | Sonnet | Unblocks tasks when deps merge |
-| System Reviewer | daily 9pm | Opus | Audits logs, scores the system, files proposals |
+| Merge Watcher | every 5 min | Sonnet | Unblocks tasks when deps merge; syncs main into open PR branches |
+| System Reviewer | daily 9pm | Opus | Audits logs, scores the system, files proposals, syncs public repo |
 | Log Trim | every 6h | Sonnet | Archives old log entries |
 
 ---
