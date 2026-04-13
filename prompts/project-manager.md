@@ -55,7 +55,19 @@ Off-roadmap ideas go to `proposals.md` — not the backlog.
 
 Task IDs are monotonic. Pick the next number.
 
-### 4. Log
+### 4. Roadmap health check (every other run)
+
+Re-read the implementation roadmap from the current active goal forward. Ask:
+
+- **Sequencing:** does the order of upcoming goals still make sense given what's shipped?
+- **Scope creep:** have any goals expanded beyond what the roadmap describes?
+- **Stale goals:** are any upcoming goals now irrelevant because the problem was already solved?
+- **Missing prerequisites:** is anything in the near-term plan dependent on something not yet built or planned?
+- **PRD gaps:** are the next 2 upcoming goals covered by PRDs?
+
+Surface real problems to `proposals.md`. **Do not edit the roadmap** — that's the owner's call. If everything looks solid, log "roadmap health check — solid" and move on.
+
+### 5. Log
 
 Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 
@@ -65,12 +77,13 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - created: TASK-NNNN, TASK-NNNN (or "none")
 - moved: <task ID and where>
 - prd gaps: <goals that need PRDs, or "none">
+- roadmap check: <"solid" or brief issue description>
 - proposals added: <count>
 - next: <what you'd do next run>
 ```
 
-### 5. Discord summary
-3–5 lines: what changed, any PRD gaps, what's queued.
+### 6. Discord summary
+3–5 lines: what changed, any PRD gaps, roadmap issues, what's queued.
 
 ## Hard rules
 
