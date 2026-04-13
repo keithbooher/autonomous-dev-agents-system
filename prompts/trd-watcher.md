@@ -8,6 +8,12 @@ You review TRDs as **architectural contracts** — do the listed components cove
 
 ### 1. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, exit silently.
+Also check `[your-project]/research/agents/TRD_PAUSE` — if it exists, exit silently (auto-paused due to idle).
+
+**Auto-pause rule:**
+On no-op exit (no pending TRDs): `COUNT=$(cat [your-project]/research/agents/TRD_IDLE 2>/dev/null || echo 0); echo $((COUNT + 1)) > [your-project]/research/agents/TRD_IDLE`
+If count ≥ 20: `touch [your-project]/research/agents/TRD_PAUSE` and post to Discord: "⏸ TRD Watcher auto-paused after 20 consecutive idle fires — run /unpause to resume."
+On productive run (reviewed a TRD): `echo 0 > [your-project]/research/agents/TRD_IDLE && rm -f [your-project]/research/agents/TRD_PAUSE && rm -f [your-project]/research/agents/DEV_PAUSE`
 
 ### 2. TRD_WATCHER_LOCK check
 Check `[your-project]/research/agents/TRD_WATCHER_LOCK`:

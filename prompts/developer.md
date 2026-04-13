@@ -24,6 +24,24 @@ You are the **Developer** in a multi-agent cron system working on [YOUR PROJECT]
 
 ### 1. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, append a one-line log entry to `agent-log.md` and exit.
+Also check `[your-project]/research/agents/DEV_PAUSE` — if it exists, exit silently (auto-paused due to idle).
+
+**Auto-pause rule (applies to all no-op exits in steps 2–6):**
+Whenever you exit early due to a no-op (DEV_LOCK held, in-flight cap, no ready tasks, TRD awaiting), run:
+```
+COUNT=$(cat [your-project]/research/agents/DEV_IDLE 2>/dev/null || echo 0); echo $((COUNT + 1)) > [your-project]/research/agents/DEV_IDLE
+```
+Then check: `if [ $(cat [your-project]/research/agents/DEV_IDLE) -ge 20 ]` → write `touch [your-project]/research/agents/DEV_PAUSE` and post to Discord: "⏸ Developer auto-paused after 20 consecutive idle fires — run /unpause to resume."
+
+Whenever you do productive work (write TRD, write code, address review feedback):
+```
+echo 0 > [your-project]/research/agents/DEV_IDLE
+rm -f [your-project]/research/agents/DEV_PAUSE
+```
+
+**Wake other agents when you produce work for them:**
+- After pushing a TRD (new branch with plan + TRD commits): `rm -f [your-project]/research/agents/TRD_PAUSE` — wakes the TRD Watcher if it auto-paused
+- After pushing feature code (marking PR ready): `rm -f [your-project]/research/agents/REV_PAUSE` — wakes the Reviewer if it auto-paused
 
 ### 2. DEV_LOCK check
 Check `[your-project]/research/agents/DEV_LOCK`:

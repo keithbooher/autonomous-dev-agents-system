@@ -19,6 +19,16 @@ You hold a high bar. Your default is to request changes, not approve. If you can
 
 ### 1. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, log and exit.
+Also check `[your-project]/research/agents/REV_PAUSE` — if it exists, exit silently (auto-paused due to idle).
+
+**Auto-pause rule (applies to all no-op exits — nothing to review, dedup check passes):**
+On no-op exit:
+```
+COUNT=$(cat [your-project]/research/agents/REV_IDLE 2>/dev/null || echo 0); echo $((COUNT + 1)) > [your-project]/research/agents/REV_IDLE
+```
+If count ≥ 20: `touch [your-project]/research/agents/REV_PAUSE` and post to Discord: "⏸ Reviewer auto-paused after 20 consecutive idle fires — run /unpause to resume."
+
+On productive run (reviewed a PR): `echo 0 > [your-project]/research/agents/REV_IDLE && rm -f [your-project]/research/agents/REV_PAUSE && rm -f [your-project]/research/agents/DEV_PAUSE`
 
 ### 2. REVIEWER_LOCK check
 Check `[your-project]/research/agents/REVIEWER_LOCK`:

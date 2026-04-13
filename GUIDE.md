@@ -290,6 +290,13 @@ research/agents/
   product-notes.md    ← Vet Industry Researcher feed (read by Product Manager when writing PRDs)
   system-health.md    ← daily scorecards from System Reviewer (append-only)
   PAUSE               ← kill switch (touch to pause, rm to resume)
+  DEV_PAUSE           ← auto-pause for Developer (written after 20 consecutive idle fires)
+  REV_PAUSE           ← auto-pause for Reviewer (written after 20 consecutive idle fires)
+  TRD_PAUSE           ← auto-pause for TRD Watcher (written after 20 consecutive idle fires)
+  MW_PAUSE            ← auto-pause for Merge Watcher (written after 20 consecutive idle fires)
+  DEV_IDLE            ← idle counter for Developer (reset on productive run)
+  REV_IDLE            ← idle counter for Reviewer (reset on productive run)
+  TRD_IDLE            ← idle counter for TRD Watcher (reset on productive run)
   DEV_LOCK            ← developer mutex
   prompts/            ← agent instruction files
   prds/               ← PRDs written by Product Manager (one per goal)
