@@ -72,7 +72,7 @@ Check the `In Progress` section of `backlog.md`. If a task is there, resume it:
   - **`— changes-requested: <reason>`**: Update the TRD file, commit, push, update field to `... — awaiting-review`. Release lock, log, post Discord, **stop**.
   - **`— approved`**: proceed to build.
 - Read the plan file at `research/plans/<branch>.md`.
-- **Work until the full task scope is complete.** Commit each logical slice. Push regularly.
+- **Work until the full task scope is complete.** Commit each logical slice, and **push immediately after every commit** — do not batch and push at the end. Each push makes work visible on GitHub as it happens.
 - When done: `gh pr ready <num>`, move task from `In Progress` to `In Review`.
 - Release the lock, log, post Discord summary, **stop**.
 
