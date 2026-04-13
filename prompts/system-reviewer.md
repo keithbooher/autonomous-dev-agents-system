@@ -84,11 +84,18 @@ For each concrete problem, write a specific proposal. Don't say "improve the pro
 
 Rate each: Impact (High/Medium/Low), Effort (High/Medium/Low).
 
-### 7. Update the system guide
+### 7. Update the system guide and public repo
 
 Read `./autonomous-dev-system-guide.md` (or equivalent). Compare against current prompt files and `crons/jobs.json`. Update any sections that are out of date — agent descriptions, schedules, task format, backlog flow.
 
 Also append today's scorecard to the bottom of the guide under `## Recent System Health` (keep last 14 days):
+
+**If prompt files or `crons/jobs.json` changed since the last review**, sync those changes to the public `autonomous-dev-agents-system` repo so it stays up to date with how the system actually works:
+- Copy updated prompt files to the public repo (stripping any project-specific paths/names — use `[your-project]` placeholders)
+- Update `crons/jobs.json` in the public repo to match schedule/timeout changes
+- Commit and push: `cd <public-repo-path> && git add -A && git commit -m "sync: system updates from nightly review YYYY-MM-DD" && git push`
+
+Only sync if something actually changed — don't push empty commits.
 
 ```markdown
 ## Recent System Health
