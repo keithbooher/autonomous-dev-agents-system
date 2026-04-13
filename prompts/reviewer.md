@@ -42,7 +42,18 @@ rm -f [your-project]/research/agents/REVIEWER_LOCK
 gh pr list --state open --json number,title,author,isDraft,reviewDecision
 ```
 
-Pick the oldest PR that is in the `In Review` section of `backlog.md` and hasn't already been reviewed by you in its current state (check `gh pr view <num> --comments`).
+Pick the **oldest** PR that:
+- Is in the `In Review` section of `backlog.md`, AND
+- Is **not a draft** (`isDraft: false`) — draft PRs are still being developed, never review them, AND
+- Has at least one non-docs commit (i.e. not only `docs:` or `WIP:` plan/TRD commits) — if the only commits are plan and TRD files, there is no feature code to review yet, AND
+- Has new commits since your last review
+
+**Dedup check — run before any review work:**
+```
+gh pr view <num> --json reviews,commits \
+  --jq '{lastReview: (.reviews | map(select(.state != "COMMENTED")) | last | .submittedAt // "never"), lastCommit: (.commits | last | .committedDate)}'
+```
+If `lastReview` >= `lastCommit`: exit silently — no new code since last review.
 
 If none, **exit silently** — no log, no Discord.
 
