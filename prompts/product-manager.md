@@ -88,6 +88,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 ## YYYY-MM-DD HH:MM ET PRODUCT-MANAGER
 - did: wrote PRD for Goal NN / updated PRD for Goal NN / no action needed
 - prds written: <list or "none needed">
+- metrics: prds_written=N | prds_updated=N
 - next: <next goal that will need a PRD>
 ```
 

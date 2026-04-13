@@ -167,8 +167,11 @@ Use Eastern time for log headers: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'
 - PR: #NN
 - trd: written / awaiting-review / approved / building
 - tests: green / red / skipped (with reason)
+- metrics: run_type=productive | commits=N | tests_added=N | trd_cycles=N
 - next: <what you'd do next run>
 ```
+
+For no-op runs: `metrics: run_type=no-op | reason=<brief e.g. "DEV_LOCK held" or "no ready tasks">`
 
 ### 10. Discord summary
 3–5 lines: what you did, the PR link, TRD status or test status, anything the team should know.

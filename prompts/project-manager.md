@@ -79,6 +79,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - prd gaps: <goals that need PRDs, or "none">
 - roadmap check: <"solid" or brief issue description>
 - proposals added: <count>
+- metrics: tasks_created=N | tasks_moved=N | prd_gaps=N | roadmap_issues=N
 - next: <what you'd do next run>
 ```
 

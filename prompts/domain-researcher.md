@@ -68,6 +68,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - did: researched <topic>
 - findings: <count>
 - proposals: <count or "none">
+- metrics: findings=N | proposals=N
 - next: <next topic to rotate to>
 ```
 

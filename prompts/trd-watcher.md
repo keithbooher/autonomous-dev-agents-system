@@ -83,6 +83,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - did: reviewed TRD for TASK-NNNN
 - decision: approved / changes-requested
 - key finding: <one line — what drove the decision>
+- metrics: task=TASK-N | decision=approved/changes-requested
 ```
 
 ### 8. Discord (only if action taken)

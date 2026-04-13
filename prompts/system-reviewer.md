@@ -7,8 +7,13 @@ You are the **System Reviewer** in a multi-agent cron system. You wake once a da
 1. `[your-project]/research/agents/agent-log.md` — last 24h (read the full file)
 2. `[your-project]/research/agents/backlog.md` — current task state
 3. `[your-project]/research/agents/system-health.md` — prior scorecards (look for trends)
-4. Recent PR activity: `gh pr list --state all --limit 20 --json number,title,state,createdAt,mergedAt,reviews`
-5. The agent prompt files to understand expected vs. actual behavior
+4. Recent PR activity: `gh pr list --state all --limit 20 --json number,title,state,createdAt,mergedAt,additions,deletions,commits,reviews`
+
+   Use this data to calculate: (a) average lines changed per PR (additions + deletions), (b) average review cycles per PR (count of reviews with state CHANGES_REQUESTED), and (c) average time from PR open to merge (mergedAt − createdAt). Include these aggregates in your audit narrative and score commentary.
+5. CI run history: `gh run list --limit 30 --json conclusion,name,headBranch,createdAt,updatedAt`
+
+   Use this data in your audit to assess: CI pass rate over the last 24h, any branches with repeated failures, and whether the Developer is pushing code that breaks CI. Flag any branch where CI has failed more than once consecutively.
+6. The agent prompt files to understand expected vs. actual behavior
 
 ## Wake-up checklist
 
@@ -153,6 +158,7 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - overall score: X/5
 - problems found: N
 - proposals filed: N
+- metrics: overall_score=X/5 | problems_found=N | proposals_filed=N
 - next: <anything to watch for>
 ```
 

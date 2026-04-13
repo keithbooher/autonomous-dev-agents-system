@@ -103,8 +103,11 @@ Use Eastern time: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 - did: reviewed PR #NN (round 1/2/...)
 - decision: changes-requested / approved / pending-human
 - standards checked: <list>
+- metrics: run_type=productive | pr=PR-N | round=N | decision=approved/changes-requested | tests_run=pass/fail
 - next: <what you'd do next run>
 ```
+
+For no-op runs: `metrics: run_type=no-op`
 
 ### 10. Discord summary
 3–5 lines: which task/PR, the decision, the key reason, what's next.
