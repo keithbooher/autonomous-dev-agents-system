@@ -93,7 +93,7 @@ If `Ready` is empty, release the lock, log "no ready tasks", and exit. Otherwise
 - Create the plan file at `research/plans/<branch-name>.md`
 - Write the TRD at `research/plans/<branch-name>-trd.md` (see TRD format below)
 - Commit: `git add research/plans/ && git commit -m "docs: plan + TRD for TASK-NNNN"`
-- Set the gh-token remote, push, open a draft PR
+- Set the gh-token remote, push, open a draft PR with title format: `"Goal N: <task title> — TASK-NNNN"`
 - Move the task from `Ready` to `In Progress` in `backlog.md`. Fill in `PR:`, `Branch:`, `TRD: research/plans/<branch>-trd.md — awaiting-review`
 - Release the lock, log, post Discord summary, **stop**
 
