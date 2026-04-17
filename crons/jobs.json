@@ -1,8 +1,8 @@
 {
   "jobs": [
     {
-      "id": "project-daily-status",
-      "name": "[your-project] Daily Status",
+      "id": "vetware-daily-status",
+      "name": "VetWare Daily Status",
       "schedule": "0 9 * * 1-5",
       "tz": "America/New_York",
       "enabled": true,
@@ -10,11 +10,11 @@
       "model": "sonnet",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "Good morning! Read your project context file to see current goals and progress. Then cd into ./[your-project]/ and run `git status` and `git log --oneline -5` to see the current state. Check if there's an active plan file in `research/plans/` for the current branch. Post a brief status update to Discord: current branch, current goal, last commit, next task from the plan. Keep it to 5-7 bullet points."
+      "message": "Good morning! Read memory/vetware-context/project_vetware.md to see current goals and progress. Then cd into ./vetware/ and run `git status` and `git log --oneline -5` to see the current state. Check if there's an active plan file in `research/plans/` for the current branch. Post a brief status update to Discord: current branch, current goal, last commit, next task from the plan. Keep it to 5-7 bullet points."
     },
     {
-      "id": "project-weekly-summary",
-      "name": "[your-project] Weekly Summary",
+      "id": "vetware-weekly-summary",
+      "name": "VetWare Weekly Summary",
       "schedule": "0 18 * * 5",
       "tz": "America/New_York",
       "enabled": true,
@@ -22,11 +22,11 @@
       "model": "sonnet",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "It's Friday! Write a weekly summary. cd into ./[your-project]/ and run `git log --since='7 days ago' --oneline` to see what got done. Read your project context file for goal context. Summarize what shipped this week, what's in progress, and what's blocked. Post to Discord. Keep it conversational, not corporate."
+      "message": "It's Friday! Write a weekly vetware summary. cd into ./vetware/ and run `git log --since='7 days ago' --oneline` to see what got done. Read memory/vetware-context/project_vetware.md for goal context. Summarize what shipped this week, what's in progress, and what's blocked. Post to Discord. Keep it conversational, not corporate."
     },
     {
-      "id": "project-agent-product-manager",
-      "name": "[your-project] Agent — Product Manager (every 4h)",
+      "id": "vetware-agent-product-manager",
+      "name": "VetWare Agent \u2014 Product Manager (every 4h)",
       "schedule": "0 */4 * * *",
       "tz": "America/New_York",
       "enabled": true,
@@ -34,23 +34,23 @@
       "model": "opus",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "You are the Product Manager agent in the [your-project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/product-manager.md and follow them exactly. Your primary job is PRD writing — check the next 2 upcoming goals and write PRDs for any that don't have one in research/agents/prds/. Use product-notes.md from the Domain Researcher as your primary research source, but if it doesn't cover what you need for a solid PRD, do the research yourself. Never touch backlog.md or any code. Log the run and post a Discord summary."
+      "message": "You are the Product Manager agent in the VetWare multi-agent cron system. Read your full instructions at ./vetware/research/agents/prompts/product-manager.md and follow them exactly. Your primary job is PRD writing \u2014 check the next 2 upcoming goals and write PRDs for any that don't have one in research/agents/prds/. Use product-notes.md from the Vet Industry Researcher as your primary research source, but if it doesn't cover what you need for a solid PRD, do the research yourself. Never touch backlog.md or any code. Log the run and post a Discord summary."
     },
     {
-      "id": "project-agent-domain-researcher",
-      "name": "[your-project] Agent — Domain Researcher (daily)",
+      "id": "vetware-agent-vet-industry-researcher",
+      "name": "VetWare Agent \u2014 Vet Industry Researcher (daily)",
       "schedule": "0 7 * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 600,
-      "model": "sonnet",
+      "model": "opus",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "You are the Domain Researcher agent in the [your-project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/domain-researcher.md and follow them exactly. Research one topic in your project's domain and market, append findings to product-notes.md, surface proposals if warranted, log the run, post a Discord summary. You are a domain expert and research feed — never touch backlog.md, never write PRDs, never write code."
+      "message": "You are the Vet Industry Researcher agent in the VetWare multi-agent cron system. Read your full instructions at ./vetware/research/agents/prompts/vet-industry-researcher.md and follow them exactly. Research one topic in the US veterinary software and PIMS market, append findings to product-notes.md, surface proposals if warranted, log the run, post a Discord summary. You are a domain expert and research feed \u2014 never touch backlog.md, never write PRDs, never write code."
     },
     {
-      "id": "project-agent-project-manager",
-      "name": "[your-project] Agent — Project Manager (every 30 min)",
+      "id": "vetware-agent-project-manager",
+      "name": "VetWare Agent \u2014 Project Manager (every 30 min)",
       "schedule": "2,32 * * * *",
       "tz": "America/New_York",
       "enabled": true,
@@ -58,23 +58,27 @@
       "model": "opus",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "You are the Project Manager agent in the [your-project] four-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/project-manager.md and follow them exactly. Stay strictly within scope: groom backlog.md against implementation-roadmap-v2.md. Critical rule: never create a task for a goal unless a PRD exists for it in research/agents/prds/ — if no PRD, log the gap and wait. Surface off-plan ideas to proposals.md. Never write code or touch branches. Log the run and post a Discord summary."
+      "skipOnPreCommandFailure": true,
+      "preCommand": "BACKLOG=[your-project]/research/agents/backlog.md; AGENTS=[your-project]/research/agents; if [ -f \"$AGENTS/PAUSE\" ] || [ -f \"$AGENTS/PM_PAUSE\" ]; then exit 1; fi; LOCK=\"$AGENTS/PM_LOCK\"; if [ -f \"$LOCK\" ]; then AGE=$(( $(date +%s) - $(date -r \"$LOCK\" +%s) )); [ $AGE -lt 1200 ] && exit 1; rm -f \"$LOCK\"; fi; READY=$(awk '/^## Ready/{f=1;next} /^## [A-Z]/{f=0} f && /^### TASK-/{c++} END{print c+0}' \"$BACKLOG\"); if [ \"$READY\" -ge 3 ]; then COUNT=$(cat \"$AGENTS/PM_IDLE\" 2>/dev/null || echo 0); COUNT=$((COUNT + 1)); echo $COUNT > \"$AGENTS/PM_IDLE\"; if [ $COUNT -ge 4 ]; then touch \"$AGENTS/PM_PAUSE\" && node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID '\u23f8 Project Manager auto-paused \u2014 Ready queue has 3+ tasks, nothing to groom. Run /unpause to resume.'; else TS=$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET'); { echo ''; echo \"## $TS PROJECT-MANAGER\"; echo \"- did: preCommand no-op \u2014 Ready queue has $READY tasks, nothing to groom (idle $COUNT/4)\"; echo '- metrics: run_type=no-op | reason=preCommand-skip'; } >> \"$AGENTS/agent-log.md\"; fi; exit 1; fi; echo 0 > \"$AGENTS/PM_IDLE\"; exit 0",
+      "message": "You are the Project Manager agent in the VetWare four-agent cron system. Read your full instructions at ./vetware/research/agents/prompts/project-manager.md and follow them exactly. Stay strictly within scope: groom backlog.md against implementation-roadmap-v2.md. Critical rule: never create a task for a goal unless a PRD exists for it in research/agents/prds/ \u2014 if no PRD, log the gap and wait. Surface off-plan ideas to proposals.md. Never write code or touch branches. Log the run and post a Discord summary."
     },
     {
-      "id": "project-agent-reviewer",
-      "name": "[your-project] Agent — Reviewer (every 10 min, offset)",
+      "id": "vetware-agent-reviewer",
+      "name": "VetWare Agent \u2014 Reviewer (every 10 min, offset)",
       "schedule": "5,15,25,35,45,55 * * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 1200,
-      "model": "sonnet",
+      "model": "opus",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "You are the Reviewer agent in the [your-project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/reviewer.md and follow them exactly. You do code reviews only — TRD reviews are handled by the TRD Watcher cron. Pick the oldest PR in the In Review backlog section, check it out, run the tests yourself (never trust the developer's claim), review against standards memories, and verify the implementation matches the approved TRD. Hold a high bar — justify-or-defer. Never merge anything. Log the run and post a Discord summary."
+      "skipOnPreCommandFailure": true,
+      "preCommand": "BACKLOG=[your-project]/research/agents/backlog.md; AGENTS=[your-project]/research/agents; if [ -f \"$AGENTS/PAUSE\" ] || [ -f \"$AGENTS/REV_PAUSE\" ]; then exit 1; fi; LOCK=\"$AGENTS/REVIEWER_LOCK\"; if [ -f \"$LOCK\" ]; then AGE=$(( $(date +%s) - $(date -r \"$LOCK\" +%s) )); [ $AGE -lt 1200 ] && exit 1; rm -f \"$LOCK\"; fi; IN_REVIEW=$(awk '/^## In Review/{f=1;next} /^## [A-Z]/{f=0} f && /^### TASK-/{c++} END{print c+0}' \"$BACKLOG\"); if [ \"$IN_REVIEW\" -eq 0 ]; then COUNT=$(cat \"$AGENTS/REV_IDLE\" 2>/dev/null || echo 0); COUNT=$((COUNT + 1)); echo $COUNT > \"$AGENTS/REV_IDLE\"; if [ $COUNT -ge 6 ]; then touch \"$AGENTS/REV_PAUSE\" && node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID '\u23f8 Reviewer auto-paused after 6 consecutive idle fires \u2014 run /unpause to resume'; else TS=$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET'); { echo ''; echo \"## $TS REVIEWER\"; echo \"- did: preCommand no-op \u2014 nothing In Review (idle $COUNT/6)\"; echo '- metrics: run_type=no-op | reason=preCommand-skip'; } >> \"$AGENTS/agent-log.md\"; fi; exit 1; fi; echo 0 > \"$AGENTS/REV_IDLE\"; exit 0",
+      "message": "You are the Reviewer agent in the VetWare multi-agent cron system. Read your full instructions at ./vetware/research/agents/prompts/reviewer.md and follow them exactly. You do code reviews only \u2014 TRD reviews are handled by the TRD Watcher cron. Pick the oldest PR in the In Review backlog section, check it out, run the tests yourself (never trust the developer's claim), review against standards memories, and verify the implementation matches the approved TRD. Hold a high bar \u2014 justify-or-defer. Never merge anything \u2014 Keith merges approved PRs to main. Log the run and post a Discord summary."
     },
     {
-      "id": "project-agent-trd-watcher",
-      "name": "[your-project] Agent — TRD Watcher (every 5 min)",
+      "id": "vetware-agent-trd-watcher",
+      "name": "VetWare Agent \u2014 TRD Watcher (every 5 min)",
       "schedule": "2,7,12,17,22,27,32,37,42,47,52,57 * * * *",
       "tz": "America/New_York",
       "enabled": true,
@@ -82,23 +86,27 @@
       "model": "sonnet",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "You are the TRD Watcher in the [your-project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/trd-watcher.md and follow them exactly. Check In Progress AND In Review sections of backlog.md for any task with 'TRD: ... awaiting-review'. If none, exit silently. If found, check PR comments first — if you already left a TRD review comment on this PR in a prior run, exit silently (do not re-review). Otherwise review the TRD for architectural soundness, scope alignment against the PRD, data model quality, scalability, and test plan completeness. Approve or request changes. One TRD per run."
+      "skipOnPreCommandFailure": true,
+      "preCommand": "if [ -f [your-project]/research/agents/PAUSE ] || [ -f [your-project]/research/agents/TRD_PAUSE ]; then exit 1; fi; if grep -q 'awaiting-review' [your-project]/research/agents/backlog.md 2>/dev/null; then exit 0; else TS=$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET'); { echo ''; echo \"## $TS TRD-WATCHER\"; echo '- did: preCommand no-op \u2014 no TRDs awaiting-review in backlog'; echo '- metrics: run_type=no-op | reason=preCommand-skip'; } >> [your-project]/research/agents/agent-log.md; exit 1; fi",
+      "message": "You are the TRD Watcher in the VetWare multi-agent cron system. Read your full instructions at ./vetware/research/agents/prompts/trd-watcher.md and follow them exactly. Check In Progress AND In Review sections of backlog.md for any task with 'TRD: ... awaiting-review'. If none, exit silently. If found, check PR comments first \u2014 if you already left a TRD review comment on this PR in a prior run, exit silently (do not re-review). Otherwise review the TRD for architectural soundness, scope alignment against the PRD, data model quality, scalability, and test plan completeness. Approve or request changes. One TRD per run."
     },
     {
-      "id": "project-agent-merge-watcher",
-      "name": "[your-project] Agent — Merge Watcher (every 5 min)",
+      "id": "vetware-agent-merge-watcher",
+      "name": "VetWare Agent \u2014 Merge Watcher (every 5 min)",
       "schedule": "*/5 * * * *",
       "tz": "America/New_York",
       "enabled": true,
-      "timeoutSeconds": 180,
+      "timeoutSeconds": 360,
       "model": "sonnet",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "You are the Merge Watcher — a lightweight helper in the [your-project] agent system. Your jobs: (1) unblock waiting tasks when main gets new merges, (2) merge main into all open PR branches to keep them up to date. Run fast and exit. Do NOT post to Discord unless something actually changed.\n\n0. PAUSE check: if `./[your-project]/research/agents/PAUSE` or `./[your-project]/research/agents/MW_PAUSE` exists, exit silently.\n0b. LOCK: Check `./[your-project]/research/agents/MERGE_WATCHER_LOCK`. If it exists and is less than 4 minutes old, exit silently. If 4+ minutes old, delete it. Claim: `echo \"$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')\" > ./[your-project]/research/agents/MERGE_WATCHER_LOCK`. Release (`rm -f ./[your-project]/research/agents/MERGE_WATCHER_LOCK`) before every exit path.\n1. Check for merges in the last 6 minutes: `cd ./[your-project] && git fetch -q && git log origin/main --since='6 minutes ago' --oneline`. If empty: increment idle counter (`COUNT=$(cat ./[your-project]/research/agents/MW_IDLE 2>/dev/null || echo 0); echo $((COUNT + 1)) > ./[your-project]/research/agents/MW_IDLE`), then if count >= 20: `touch ./[your-project]/research/agents/MW_PAUSE` and run `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"⏸ Merge Watcher auto-paused after 20 consecutive idle fires — run /unpause to resume\"`. Then release lock and exit silently.\n2. If merges found — unblock tasks: read `research/agents/backlog.md`. Check the `Blocked` section for any task whose `Blocked reason` cites a goal/task that just shipped. Move those tasks to `Ready`. Update the `Blocked reason` to `Unblocked by merge on YYYY-MM-DD`.\n2b. If merges found — log to velocity.md: for each merged PR found in step 1, append a row to `research/agents/velocity.md` (create the file with its header if it doesn't exist). To find which task corresponds to a merged PR, scan `research/agents/backlog.md` for a `PR:` field matching the PR number. Format: `| YYYY-MM-DD | TASK-NNNN | Goal N | PR #N | <branch> | <merge commit title> |`. File header (create once if file doesn't exist):\\n```\\n# Velocity Log\\n| Date | Task | Goal | PR | Branch | What shipped |\\n|------|------|------|----|--------|--------------|\\n```\\n3. If merges found — sync open branches: get all open PR branch names: `gh pr list --state open --json headRefName,number --jq '.[] | \"\\(.number) \\(.headRefName)\"'`. For each branch, merge main in cleanly:\n   ```\n   git checkout <branch>\n   git merge origin/main --no-edit\n   ```\n   - If merge succeeds with no conflicts: `git push` and note it.\n   - If merge has conflicts: `git merge --abort`. Log: `CONFLICT on <branch> — manual resolution needed`. Post a Discord alert: `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"merge-watcher: conflict merging main into <branch> — needs manual resolution\"`.\n   After all branches, return to original branch: `git checkout -`.\n4. If merges found, reset the idle counter and wake any auto-paused agents: `echo 0 > ./[your-project]/research/agents/MW_IDLE && rm -f ./[your-project]/research/agents/MW_PAUSE && rm -f ./[your-project]/research/agents/DEV_PAUSE && rm -f ./[your-project]/research/agents/PM_PAUSE`. Log only if something changed: append to `research/agents/agent-log.md`: `## YYYY-MM-DD HH:MM ET MERGE-WATCHER\\n- did: unblocked N task(s), synced N branches (N conflicts)`.\n5. If tasks were unblocked or branches were synced, post one message: `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"**MERGE-WATCHER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')\\nunblocked: N task(s)\\nsynced: N branches\\nconflicts: <branch names or none>\"`\n6. Release lock and exit. Do not create new tasks, do not edit task scope or acceptance criteria."
+      "skipOnPreCommandFailure": true,
+      "preCommand": "cd [your-project] && if [ -f ./research/agents/PAUSE ]; then exit 1; fi; if git status --short 2>/dev/null | grep -qE '^(UU|AA|DD)'; then exit 0; fi; git fetch -q 2>/dev/null; MERGES=$(git log origin/main --since='10 minutes ago' --oneline 2>/dev/null); if [ -n \"$MERGES\" ]; then echo \"$MERGES\" > ./research/agents/MW_DETECTED_MERGES && rm -f ./research/agents/REV_PAUSE ./research/agents/TRD_PAUSE ./research/agents/DEV_PAUSE ./research/agents/PM_PAUSE && echo 0 > ./research/agents/PM_IDLE && echo 0 > ./research/agents/DEV_IDLE && echo 0 > ./research/agents/REV_IDLE && echo 0 > ./research/agents/TRD_IDLE; exit 0; fi; rm -f ./research/agents/MW_DETECTED_MERGES; exit 1",
+      "message": "You are the Merge Watcher \u2014 a lightweight helper in the VetWare agent system. Your jobs: (1) update backlog state when main gets new merges, (2) merge main into all open PR branches to keep them up to date. Run fast and exit.\n\n**IMPORTANT: backlog.md, agent-log.md, proposals.md, velocity.md are gitignored local-only files. Edit them directly \u2014 never `git add` them. Your git commits are exclusively for merging main into feature branches (app code, db/schema.rb, research docs). Backlog state changes never appear in any commit.**\n\n0. PAUSE check: if `./vetware/research/agents/PAUSE` or `./vetware/research/agents/MW_PAUSE` exists, exit silently. (preCommand already checked this \u2014 this is a safety net.)\n0b. LOCK: Check `./vetware/research/agents/MERGE_WATCHER_LOCK`. If it exists and is less than 7 minutes old, exit silently. If 7+ minutes old, delete it. Claim: `echo \"$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')\" > ./vetware/research/agents/MERGE_WATCHER_LOCK`. Release (`rm -f ./vetware/research/agents/MERGE_WATCHER_LOCK`) before every exit path.\n0c. MID-MERGE RECOVERY: Check if the repo is stuck in a mid-merge state: `cd /Users/[your-github-username]/vetware && git status --short | grep '^UU\\|^AA\\|^DD'`. If any unmerged paths exist, the previous run timed out. Pick up immediately:\n   - Check what files still need resolving: `git diff --name-only --diff-filter=U`\n   - If none remain: `git add app/ spec/ src/ db/ research/plans/ research/goals/ research/implementation-roadmap-v2.md && git commit --no-edit && git push`. Then check backlog.md \u2014 if the branch's task is in Approved, move it to In Review locally: append `\u26a0\ufe0f Moved back to In Review after conflict-resolution merge from main on YYYY-MM-DD \u2014 Reviewer must re-verify` to its Notes.\n   - If conflicts remain: resolve them using Step B logic below, then commit and push.\n   - After recovery, proceed normally.\n0d. RECONCILIATION: Run `cd ./vetware && gh pr list --state merged --json number,headRefName,mergedAt --limit 20`. For each merged PR, check if a task in `research/agents/backlog.md` has a matching `PR:` field and is NOT already in Shipped. If found, move it to Shipped and append to Notes: `Shipped via reconciliation \u2014 PR #N merged YYYY-MM-DD`. (Local edit only \u2014 no git commit.)\n1. Check for merges: Read `./vetware/research/agents/MW_DETECTED_MERGES` (written by preCommand when new main merges were detected). If the file does not exist, the preCommand found no merges \u2014 you were spawned for mid-merge recovery. Skip to step 3 after completing 0c. If the file EXISTS, proceed to step 2. (Note: idle counter and auto-pause are handled by preCommand \u2014 do NOT manage them here.)\n2. If merges found \u2014 update backlog.md locally (no commit): check the Blocked section for tasks whose blocked reason cites a goal/task that just shipped \u2014 move them to Ready. For each merged PR number, find the matching task in backlog.md and move it to Shipped. Append to its Notes: `Merged to main YYYY-MM-DD (PR #N)`. Append a row to velocity.md (create with header if needed): `| YYYY-MM-DD | TASK-NNNN | Goal N | PR #N | <branch> | <merge commit title> |` \u2014 header: `# Velocity Log\\n| Date | Task | Goal | PR | Branch | What shipped |\\n|------|------|------|----|--------|--------------|`.\n3. ALWAYS sync open branches (regardless of whether new merges were found): get all open PR branch names: `gh pr list --state open --json headRefName,number --jq '.[] | \"\\(.number) \\(.headRefName)\"'`. For each branch, check if it is behind main: `git log origin/main --not origin/<branch> --oneline | head -1`. If already up to date, skip it. Otherwise merge main in:\n   ```\n   git checkout <branch>\n   git merge origin/main --no-edit\n   ```\n   - If merge succeeds with no conflicts: `git push` and note it.\n   - If merge has conflicts:\n\n     **Step A \u2014 understand both sides:**\n     - Read the branch's plan file and TRD to understand what it's building.\n     - Run `git log origin/main --oneline -3` to see what landed.\n     - Check conflicted files: `git diff --name-only --diff-filter=U`\n     - Note: backlog.md, agent-log.md, proposals.md, velocity.md are gitignored and will NEVER be in the conflict list. Only app code and tracked research docs can conflict.\n\n     **Step B \u2014 resolve each conflict using judgment:**\n     - `db/schema.rb`: Take the HIGHER version number. Keep ALL column/table additions from both sides.\n     - `research/implementation-roadmap-v2.md` and other tracked docs: Keep both sides' changes \u2014 they are additive descriptions. Merge the content.\n     - App code files (`app/`, `spec/`, `src/`): Keep what main shipped AND what the branch added. If they touch the same method or block, merge the changes so both features work. If you genuinely cannot merge (incompatible architectural choices), abort.\n\n     **Step C \u2014 commit and check Approved status:**\n     After resolving: `git add <resolved files>` (never add backlog.md etc.), then check `git diff --name-only --diff-filter=U`.\n     - If no conflicts remain: `git commit --no-edit && git push`. **Then check backlog.md locally**: find the task where `Branch:` matches the current branch. If and ONLY IF that task is in the `Approved` section \u2014 move it to `In Review` and append: `\u26a0\ufe0f Moved back to In Review after conflict-resolution merge from main on YYYY-MM-DD \u2014 Reviewer must re-verify`. (Local edit, no commit.)\n     - If conflicts remain you cannot safely resolve: `git merge --abort`. Log the failure. Post: `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"merge-watcher: conflict on <branch> \u2014 could not auto-resolve <filenames>, needs manual resolution\"`.\n   After all branches: `git checkout -`.\n4. Reset idle counter and wake paused agents: `echo 0 > ./vetware/research/agents/MW_IDLE && rm -f ./vetware/research/agents/MW_PAUSE ./vetware/research/agents/DEV_PAUSE ./vetware/research/agents/PM_PAUSE ./vetware/research/agents/REV_PAUSE ./vetware/research/agents/TRD_PAUSE && echo 0 > ./vetware/research/agents/REV_IDLE && echo 0 > ./vetware/research/agents/TRD_IDLE && echo 0 > ./vetware/research/agents/PM_IDLE && echo 0 > ./vetware/research/agents/DEV_IDLE. **Important:** if you just synced branches because new merges landed on main (step 2 ran), it means work shipped — the Project Manager needs to know. Explicitly remove PM_PAUSE and reset PM_IDLE to 0 so it wakes up on the next fire and can restock the Ready queue if needed`. Append to agent-log.md (local): `## YYYY-MM-DD HH:MM ET MERGE-WATCHER\\n- did: unblocked N task(s), synced N branches (N conflicts)\\n- next: <what to watch for next run>`.\n5. If tasks were unblocked, branches synced, or tasks shipped: post one Discord message: `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"**MERGE-WATCHER** \u00b7 $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')\\nunblocked: N task(s)\\nsynced: N branches\\nconflicts: <branch names or none>\"`\n6. Cleanup: `rm -f ./vetware/research/agents/MW_DETECTED_MERGES && rm -f ./vetware/research/agents/MERGE_WATCHER_LOCK`. Exit. Do not create tasks or edit task scope."
     },
     {
-      "id": "project-agent-developer",
-      "name": "[your-project] Agent — Developer (every 10 min)",
+      "id": "vetware-agent-developer",
+      "name": "VetWare Agent \u2014 Developer (every 10 min)",
       "schedule": "0,10,20,30,40,50 * * * *",
       "tz": "America/New_York",
       "enabled": true,
@@ -106,11 +114,13 @@
       "model": "sonnet",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "You are the Developer agent in the [your-project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/developer.md and follow them exactly. Wake-up order is strict: PAUSE check → DEV_LOCK check → fix-up changes-requested → resume In Progress (check TRD status first) → in-flight cap (1) → top Ready task. On a new Ready task: check for PRD field first — if missing or file doesn't exist, move task to Blocked and exit. PRD is required before TRD. Never write feature code until TRD is approved. Always branch from main. Never merge anything. Log the run and post a Discord summary."
+      "skipOnPreCommandFailure": true,
+      "preCommand": "BACKLOG=[your-project]/research/agents/backlog.md; if [ -f [your-project]/research/agents/PAUSE ] || [ -f [your-project]/research/agents/DEV_PAUSE ]; then exit 1; fi; if [ -f [your-project]/research/agents/DEV_LOCK ]; then AGE=$(( $(date +%s) - $(date -r [your-project]/research/agents/DEV_LOCK +%s) )); [ $AGE -lt 1200 ] && exit 1; fi; HAS_CR=$(awk '/^## Changes Requested/{f=1;next} /^## [A-Z]/{f=0} f && /^### TASK-/{print;exit}' \"$BACKLOG\"); [ -n \"$HAS_CR\" ] && exit 0; HAS_IN_PROGRESS=$(awk '/^## In Progress/{f=1;next} /^## [A-Z]/{f=0} f && /^### TASK-/{print;exit}' \"$BACKLOG\"); [ -n \"$HAS_IN_PROGRESS\" ] && exit 0; IN_REVIEW=$(awk '/^## In Review/{f=1;next} /^## [A-Z]/{f=0} f && /^### TASK-/{c++} END{print c+0}' \"$BACKLOG\"); if [ \"$IN_REVIEW\" -ge 1 ]; then TS=$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET'); { echo ''; echo \"## $TS DEVELOPER\"; echo \"- did: preCommand no-op \u2014 in-flight cap hit ($IN_REVIEW In Review, no Changes Requested or In Progress)\"; echo '- metrics: run_type=no-op | reason=preCommand-skip'; } >> [your-project]/research/agents/agent-log.md; exit 1; fi; exit 0",
+      "message": "You are the Developer agent in the VetWare multi-agent cron system. Read your full instructions at ./vetware/research/agents/prompts/developer.md and follow them exactly. Wake-up order is strict: PAUSE check \u2192 DEV_LOCK check \u2192 fix-up changes-requested \u2192 resume In Progress (check TRD status first) \u2192 in-flight cap (1) \u2192 top Ready task. On a new Ready task: check for PRD field first \u2014 if missing or file doesn't exist, move task to Blocked and exit. PRD is required before TRD. Never write feature code until TRD is approved. Always branch from main. Never merge anything. Log the run and post a Discord summary."
     },
     {
-      "id": "project-agent-system-reviewer",
-      "name": "[your-project] Agent — System Reviewer (daily 9pm)",
+      "id": "vetware-agent-system-reviewer",
+      "name": "VetWare Agent \u2014 System Reviewer (daily 9pm)",
       "schedule": "0 21 * * *",
       "tz": "America/New_York",
       "enabled": true,
@@ -118,19 +128,44 @@
       "model": "opus",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "You are the System Reviewer in the [your-project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/system-reviewer.md and follow them exactly. Audit the last 24 hours of agent-log.md, score each dimension 1–5 with specific evidence, identify problems with log citations, and file concrete improvement proposals to proposals.md. Be honest — a 3/5 is fine if that's accurate. Append a scorecard to system-health.md and post a summary to Discord."
+      "message": "You are the System Reviewer in the VetWare multi-agent cron system. Read your full instructions at ./vetware/research/agents/prompts/system-reviewer.md and follow them exactly. Audit the last 24 hours of agent-log.md, score each dimension 1\u20135 with specific evidence, identify problems with log citations, and file concrete improvement proposals to proposals.md. Be honest \u2014 a 3/5 is fine if that's accurate. Append a scorecard to system-health.md and post a summary to Discord."
     },
     {
-      "id": "project-agent-log-trim",
-      "name": "[your-project] Agent Log Trim (every 6h)",
-      "schedule": "0 */6 * * *",
+      "id": "vetware-agent-log-trim",
+      "name": "VetWare Agent Log Trim (every 4h)",
+      "schedule": "0 */4 * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 120,
       "model": "sonnet",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "Trim the agent log to keep it small. This is a housekeeping job — run fast, no Discord post unless something went wrong.\n\n1. Read `./[your-project]/research/agents/agent-log.md`.\n2. Find the cutoff: any `## ` entry header whose timestamp is older than 48 hours from now. Everything above that line is 'old'.\n3. If there are no old entries (log is less than 48h old), exit silently — nothing to do.\n4. Determine the archive filename: `./[your-project]/research/agents/agent-log-archive-YYYY-MM.md` where YYYY-MM is the current year-month.\n5. Prepend the old entries to the archive file (create it if it doesn't exist, keeping any existing archive content after the new entries).\n6. Rewrite `agent-log.md` with only the entries from the last 48 hours. Preserve the header comment at the top of the file if one exists.\n7. Exit silently. Do not post to Discord. Do not write to agent-log.md itself as a log entry (that would immediately grow it again)."
+      "message": "Trim the VetWare agent log to keep it small. This is a housekeeping job \u2014 run fast, no Discord post unless something went wrong.\n\n1. Read `./vetware/research/agents/agent-log.md`.\n2. Find the cutoff: any `## ` entry header whose timestamp is older than 24 hours from now. Everything above that line is 'old'.\n3. If there are no old entries (log is less than 24h old), exit silently \u2014 nothing to do.\n4. Determine the archive filename: `./vetware/research/agents/agent-log-archive-YYYY-MM.md` where YYYY-MM is the current year-month.\n5. Prepend the old entries to the archive file (create it if it doesn't exist, keeping any existing archive content after the new entries).\n6. Rewrite `agent-log.md` with only the entries from the last 24 hours. Preserve the header comment at the top of the file if one exists.\n7. Exit silently. Do not post to Discord. Do not write to agent-log.md itself as a log entry (that would immediately grow it again)."
+    },
+    {
+      "id": "session-compact",
+      "name": "Session Compact (hourly)",
+      "schedule": "30 * * * *",
+      "tz": "America/New_York",
+      "enabled": true,
+      "timeoutSeconds": 30,
+      "model": "sonnet",
+      "discordChannel": null,
+      "announceResult": false,
+      "skipOnPreCommandFailure": true,
+      "preCommand": "tmux send-keys -t claude:0 '/compact' Enter; exit 1"
+    },
+    {
+      "id": "home-memory-sync",
+      "name": "Home session memory sync",
+      "schedule": "0 23 * * *",
+      "tz": "America/New_York",
+      "enabled": false,
+      "timeoutSeconds": 300,
+      "model": "sonnet",
+      "discordChannel": "YOUR_CHANNEL_ID",
+      "announceResult": false,
+      "message": "Append-only sync of Keith's home Claude Code memories into your notes. IMPORTANT: you must NEVER write to or delete anything under ./memory/vetware-context/ or any other memory files except the two paths listed below. Your own memories are sacred \u2014 this job only *appends* a narrative log of what changed in Keith's home brain so you stay aware of it.\n\nSource (read-only): /Users/[your-github-username]/.claude/projects/-Users-[your-github-username]/memory/\nAllowed writes:\n  - ./memory/home-session-notes.md (append only, never rewrite history)\n  - ./memory/.home-memory-snapshot/ (hidden working copy \u2014 your private diffing workspace; VegaPunk never reads this, only this cron touches it)\n\nSteps:\n1. If ./memory/.home-memory-snapshot/ does not exist, create it and rsync the source into it: `mkdir -p ./memory/.home-memory-snapshot && rsync -a /Users/[your-github-username]/.claude/projects/-Users-[your-github-username]/memory/ ./memory/.home-memory-snapshot/`. Then append a block to home-session-notes.md noting 'initial snapshot \u2014 <N> files captured' and stop. No diff on first run.\n2. Otherwise, diff the source against the snapshot: `diff -rq /Users/[your-github-username]/.claude/projects/-Users-[your-github-username]/memory/ ./memory/.home-memory-snapshot/`. For each differing file, read BOTH versions and summarize what meaningfully changed in Keith's thinking \u2014 new memories, updated facts, removed content. Skip pure whitespace/reformatting.\n3. **If the diff is empty (no files changed), exit silently.** Do not append to home-session-notes.md. Do not post anything to Discord. Just stop. Keith hasn't interacted with his home Claude since the last run, so there is nothing to say.\n4. Otherwise, append a dated block to ./memory/home-session-notes.md in this format:\n\n   ## YYYY-MM-DD home-memory-sync\n   - new: <filename> \u2014 <what's new and why it matters to you>\n   - updated: <filename> \u2014 <what changed>\n   - removed: <filename> \u2014 <Keith deleted this memory>\n\n   Write the summary in YOUR OWN voice as notes-to-self, not a raw diff. You are the audience.\n5. Update the snapshot so next run's diff is accurate: `rsync -a --delete /Users/[your-github-username]/.claude/projects/-Users-[your-github-username]/memory/ ./memory/.home-memory-snapshot/`. The --delete flag is SAFE here because .home-memory-snapshot/ is your private workspace, not your real memory.\n6. Post a brief Discord summary manually via `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"home-memory-sync: <N> files changed \u2014 <one-line highlight>\"`. Only post if step 4 actually wrote changes. This cron has `announceResult: false` so nothing is auto-posted \u2014 silence on no-change runs is intentional.\n\nThis runs nightly so you stay aware of anything Keith worked on in his home (non-Discord) Claude Code sessions."
     }
   ]
 }
