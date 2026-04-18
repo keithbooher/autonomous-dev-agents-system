@@ -354,7 +354,7 @@ No-op: `metrics: run_type=no-op | reason=<brief>`
 # Reviewer Agent
 
 You are the Reviewer in a multi-agent cron system. You are the gate between the Developer and main.
-Keith (the human) merges approved PRs — you never merge anything.
+the user (the human) merges approved PRs — you never merge anything.
 You hold a high bar. Your default is to request changes, not approve.
 You do code reviews only. TRD reviews are handled by the TRD Watcher — do not check for pending TRDs.
 
@@ -843,19 +843,19 @@ node workspace/memory/setup-db.js
 This creates `workspace/memory/knowledge.db` with three tables:
 - `memories` — arbitrary fact storage with embeddings
 - `entities` — named people, places, organizations
-- `relationships` — edges between entities (e.g. "Keith" ↔ "Marcus" → "friends")
+- `relationships` — edges between entities (e.g. "the user" ↔ "Marcus" → "friends")
 
 ### Writing memories
 
 ```bash
 # Store a fact
-node workspace/memory/remember.js "Keith prefers async/await over .then() chains" --type preference --tags "keith,coding" --importance 4
+node workspace/memory/remember.js "the user prefers async/await over .then() chains" --type preference --tags "keith,coding" --importance 4
 
 # Store a named entity
-node workspace/memory/remember.js --entity "Marcus" --type person --notes "Keith's friend, works at biotech startup in SF"
+node workspace/memory/remember.js --entity "Marcus" --type person --notes "the user's friend, works at biotech startup in SF"
 
 # Store a relationship
-node workspace/memory/remember.js --relationship "Keith" "Marcus" "friends" --notes "met at conference"
+node workspace/memory/remember.js --relationship "the user" "Marcus" "friends" --notes "met at conference"
 ```
 
 **Options:**
@@ -869,10 +869,10 @@ node workspace/memory/remember.js --relationship "Keith" "Marcus" "friends" --no
 
 ```bash
 # Semantic search — returns top 5 most relevant memories
-node workspace/memory/recall.js "what does Keith like about frontend development?"
+node workspace/memory/recall.js "what does the user like about frontend development?"
 
 # More results
-node workspace/memory/recall.js "Keith's background" --limit 10
+node workspace/memory/recall.js "the user's background" --limit 10
 
 # Most recent entries
 node workspace/memory/recall.js --recent 20
@@ -897,12 +897,12 @@ Write a memory when you learn something worth keeping:
   node memory/remember.js "content" --type fact|person|preference --tags "tag1,tag2" --importance 1-5
 
 Recall memories when context from past conversations would help:
-  node memory/recall.js "what is Keith working on?"
+  node memory/recall.js "what is the user working on?"
   node memory/recall.js --recent 20
 
-When to write: facts about Keith's life, work, preferences, people he mentions, decisions he makes.
-When to recall: at the start of a new topic, when Keith mentions a person or place.
-Don't write: ephemeral task details, project technical state (that belongs in vetware-context/).
+When to write: facts about the user's life, work, preferences, people he mentions, decisions he makes.
+When to recall: at the start of a new topic, when the user mentions a person or place.
+Don't write: ephemeral task details, project technical state (that belongs in [your-project]-context/).
 ```
 
 ---
@@ -1247,3 +1247,4 @@ _(updated nightly by System Reviewer)_
 | 2026-04-13 | 4/5 | 5/5 | 3/5 | 4/5 | 5/5 | 1/5 | **3/5** |
 | 2026-04-14 | 5/5 | 5/5 | 3/5 | 4/5 | 4/5 | 3/5 | **4/5** |
 | 2026-04-17 | 5/5 | 5/5 | 3/5 | 5/5 | 5/5 | 3/5 | **4/5** |
+| 2026-04-18 | 4/5 | 3/5 | 3/5 | 1/5 | 5/5 | 2/5 | **3/5** |
