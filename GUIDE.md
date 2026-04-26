@@ -1,6 +1,8 @@
 # Autonomous Development System — Complete Setup Guide
 
-A multi-agent Claude Code system that runs a continuous development loop inside a Discord bot. Agents take tasks from a backlog, write architectural plans, build features, review PRs, and keep the queue stocked — all on cron schedules, around the clock, without you babysitting. You own the `main` branch and decide when to ship. The system catches its own mistakes through a TRD-then-code sequence, a dedicated code reviewer, and a nightly self-audit agent that files improvement proposals. You configure it once, tune it via prompt files, and watch it build your product.
+A multi-agent Claude Code system that runs a continuous development loop inside a Discord bot. Agents take tasks from a backlog, write architectural plans, build features, review PRs, and keep the queue stocked — all on cron schedules, around the clock, without you babysitting. You own the `main` branch and decide when to ship. The system catches its own mistakes through a TRD-then-code sequence, a dedicated code reviewer, a CI auto-fixer that patches broken tests, a nightly code auditor that files improvement tasks, and a nightly self-audit agent that files improvement proposals. You configure it once, tune it via prompt files, and watch it build your product.
+
+> **Deployment:** This guide covers both local (laptop/Mac) and VPS (Linux server) deployments. VPS deployment is recommended for production use — it keeps agents running 24/7 without leaving your laptop on. See Part 1E for VPS-specific setup.
 
 ---
 
@@ -25,7 +27,11 @@ cron-runner reads workspace/crons/jobs.json
     ├── Every 4 hours: Product Manager          All agents read/write:       │
     ├── Daily 7am: Industry Researcher          [your-project]/research/     │
     ├── Daily 9pm: System Reviewer              agents/backlog.md            │
-    └── Every 4–6 hours: Log Trim               agents/agent-log.md  ───────┘
+    ├── Every 3 hours: Codebase Auditor         agents/agent-log.md  ───────┘
+    ├── Every 4 hours: Log Trim
+    ├── Every 2 min: Main CI Fixer  ← trigger-based, skips if no failure signal
+    ├── Every 2 min: PR CI Fixer    ← trigger-based, skips if no failure signal
+    └── Every 5 min: Stall Watcher  ← diagnoses & re-signals when a READY trigger file sits unprocessed >30 min
 
 Your project repo (symlinked into workspace/)
     research/
@@ -37,11 +43,16 @@ Your project repo (symlinked into workspace/)
         proposals.md        ← off-roadmap ideas
         product-notes.md    ← research feed
         system-health.md    ← nightly scorecards
+        audit-state.md      ← tracks which code areas the Auditor has reviewed
         prompts/            ← agent instruction files
         prds/               ← product requirement docs
       plans/                ← TRDs and work breakdowns
       goals/                ← reviewer-written approval summaries
       implementation-roadmap.md   ← source of truth for what to build
+
+/tmp/
+    [your-project]-main-ci-failed    ← written by GitHub Actions on main failure
+    [your-project]-pr-ci-failed-NNN  ← written by GitHub Actions on PR failure
 
 workspace/memory/
     knowledge.db            ← SQLite + Gemini semantic memory
@@ -61,15 +72,16 @@ Blocked  (waiting on dependency or manual input)
 
 ## Prerequisites
 
-- **macOS or Linux** (the startup script uses tmux and bash)
+- **macOS or Linux** (the startup script uses tmux and bash; a VPS running Ubuntu works great)
 - **Node.js** 18+ (`node --version`)
-- **tmux** (`brew install tmux` on macOS)
+- **tmux** (`brew install tmux` on macOS; `apt install tmux` on Ubuntu)
 - **Claude Code** installed and authenticated (`claude --version`; run `claude` once to authenticate with OAuth)
 - **GitHub CLI** (`gh`) authenticated — agents use `gh pr create`, `gh pr review`, etc.
 - **A Discord account** with permission to create a bot application
 - **A project repo** on GitHub — Rails, React, whatever; the agent prompts are fully customizable
 - **A Gemini API key** (free tier is fine) — only needed for the SQLite semantic memory system; optional if you skip that feature
 - **git** configured with your identity
+- **(VPS only) A self-hosted GitHub Actions runner** — required if you want the CI auto-fixers. Without it, the CI runs remotely and the trigger files are never written. See Part 1E.
 
 ---
 
@@ -167,6 +179,80 @@ tmux attach -t claude:slash  # watch the slash handler
 tmux kill-session -t claude  # stop everything
 ```
 
+### Step 1E: VPS deployment (optional but recommended)
+
+Running on a VPS keeps agents alive 24/7 without tying up your laptop. Any Linux VPS works — a $20–40/month instance with 4GB RAM is plenty for one project with CI.
+
+**Recommended setup:**
+1. Provision an Ubuntu 22.04+ VPS (DigitalOcean, Hetzner, Linode, etc.)
+2. Install prerequisites: `apt install tmux git nodejs npm` + install `gh` CLI + authenticate Claude Code
+3. Clone the discord starter and your project repo onto the VPS
+4. Copy your `config/.env` to the VPS
+5. Run `bash start-local.sh` inside a persistent tmux session — it survives SSH disconnects
+
+**Connecting from your laptop:**
+- SSH into the VPS and run `tmux attach -t claude` to watch the running system
+- Or just use Discord — that's the whole point
+
+**Self-hosted GitHub Actions runner (required for CI auto-fixers):**
+
+The Main CI Fixer and PR CI Fixer agents work by reading trigger files written to `/tmp/` when CI fails. These files are written by a GitHub Actions job that runs on a `self-hosted` runner — meaning the runner must be on the same machine as your agent system.
+
+Setup (on the VPS):
+```bash
+# Follow GitHub's runner setup instructions:
+# repo → Settings → Actions → Runners → New self-hosted runner → Linux
+# Then install and configure the runner at e.g. /home/runner/actions-runner/
+./config.sh --url https://github.com/[you]/[your-project] --token [TOKEN]
+./run.sh &   # or install as a service with ./svc.sh install && ./svc.sh start
+```
+
+Then in your `.github/workflows/ci.yml`, add a job that fires only on `main` failures and writes the trigger file:
+
+```yaml
+fix-main-on-failure:
+  needs: test
+  if: failure() && github.ref == 'refs/heads/main'
+  runs-on: self-hosted
+  steps:
+    - name: Signal CI failure to local agent
+      run: |
+        echo "${{ github.run_id }} ${{ github.sha }}" > /tmp/[your-project]-main-ci-failed
+```
+
+For PR CI failures, add a separate job:
+
+```yaml
+signal-pr-failure:
+  needs: test
+  if: failure() && github.event_name == 'pull_request'
+  runs-on: self-hosted
+  steps:
+    - name: Signal PR CI failure to local agent
+      run: |
+        echo "${{ github.event.pull_request.number }} ${{ github.head_ref }} ${{ github.run_id }}" \
+          > /tmp/[your-project]-pr-ci-failed-${{ github.event.pull_request.number }}
+```
+
+The CI Fixer agents check for these files every 2 minutes. If found, they investigate the failure, fix it, and push. If not found, the preCommand skips the Claude spawn entirely (zero token cost).
+
+**Kanban Board:**
+
+The harness includes an optional web-based Kanban dashboard (`workspace/kanban/server.js`). It serves a visual board you can view in a browser, driven by a local `kanban-board.md` file in your project. Agents don't write to it directly — you use it as a human-readable status view.
+
+If you're running on a VPS, you can expose the Kanban server on a local port and access it via SSH tunnel:
+
+```bash
+# On VPS: start the kanban server (already part of the cron system)
+node workspace/kanban/server.js
+
+# On laptop: tunnel to it
+ssh -L 3001:localhost:3001 [your-vps-ip]
+# Then open http://localhost:3001 in your browser
+```
+
+For Mac users who want a live-updating board: the `start-fswatch.sh` script watches `kanban-board.md` locally and syncs it to the VPS via `scp` on every save. This lets you edit the board on your Mac and see it update on the VPS in real time.
+
 ---
 
 ## Part 2: Your Project Repo Setup
@@ -194,6 +280,9 @@ your-project/
         industry-researcher.md
         merge-watcher.md
         system-reviewer.md
+        codebase-auditor.md
+        main-ci-fixer.md
+        pr-ci-fixer.md
       prds/                        ← product requirement docs, one per goal
     plans/                         ← TRDs and work breakdowns (developer writes these)
     goals/                         ← reviewer-written goal summaries (auto-created)
@@ -222,6 +311,7 @@ research/agents/agent-log-archive-*.md
 research/agents/proposals.md
 research/agents/product-notes.md
 research/agents/velocity.md
+research/agents/audit-state.md
 research/agents/PAUSE
 research/agents/DEV_LOCK
 research/agents/REVIEWER_LOCK
@@ -229,6 +319,9 @@ research/agents/TRD_WATCHER_LOCK
 research/agents/MERGE_WATCHER_LOCK
 research/agents/PROJECT_MANAGER_LOCK
 research/agents/PRODUCT_MANAGER_LOCK
+research/agents/AUDITOR_LOCK
+research/agents/AUDITOR_PAUSE
+research/agents/SYSTEM_REVIEWER_LOCK
 research/agents/*_PAUSE
 research/agents/*_IDLE
 research/agents/MW_DETECTED_MERGES
@@ -354,7 +447,7 @@ No-op: `metrics: run_type=no-op | reason=<brief>`
 # Reviewer Agent
 
 You are the Reviewer in a multi-agent cron system. You are the gate between the Developer and main.
-the user (the human) merges approved PRs — you never merge anything.
+Keith (the human) merges approved PRs — you never merge anything.
 You hold a high bar. Your default is to request changes, not approve.
 You do code reviews only. TRD reviews are handled by the TRD Watcher — do not check for pending TRDs.
 
@@ -589,6 +682,93 @@ You are the System Reviewer — the system's self-improvement loop. You run nigh
 
 ---
 
+#### `prompts/codebase-auditor.md` — skeleton
+
+```markdown
+# Codebase Auditor
+
+You are the Codebase Auditor — a quality-improvement agent that fires every few hours and audits one area of the codebase per run. You file concrete, scoped AUDIT-NNNN tasks to the backlog. You do NOT write code yourself.
+
+## Wake-up checklist
+1. PAUSE check
+2. Check AUDITOR_LOCK (25-minute threshold)
+3. Read `audit-state.md` to see which areas have been reviewed recently and pick an area that hasn't been touched in the longest time
+4. Read the actual source files in that area — use Glob to find files, then read them. Never audit from memory.
+5. Check against standards (backend: skinny controllers, business logic in service objects, SQL-first queries, N+1 patterns, unbounded list queries, proper scoping, request specs; frontend: arrow functions, async/await, axios via api/ modules, no business logic in components, proper hook patterns, MUI v7 syntax)
+6. For each real violation found: file an AUDIT-NNNN task with:
+   - Specific file path and line number
+   - What the problem is
+   - What the fix looks like (concrete — not "improve this", but "extract X to an interactor")
+   - Acceptance criteria that proves it's fixed
+7. Update `audit-state.md`: mark the area as reviewed with today's date
+8. Log and post Discord summary
+
+## Hard rules
+- File tasks only for real violations — not style preferences, not hypothetical risks
+- One area per run — don't try to audit the whole codebase at once
+- Always read actual files (not from memory) before filing anything
+- Never write code or touch branches
+- AUDIT task IDs must be monotonic — scan backlog for the last AUDIT-NNNN and increment
+```
+
+---
+
+#### `prompts/main-ci-fixer.md` — skeleton
+
+```markdown
+# Main CI Fixer
+
+You are the Main CI Fixer — a trigger-based agent that fires every 2 minutes but does nothing unless a CI failure signal exists. You investigate main branch CI failures, understand what was being built, and open a PR with a fix.
+
+## Wake-up checklist
+1. Check for trigger file at `/tmp/[your-project]-main-ci-failed`. If it does not exist, exit immediately — this is a no-op, no log needed.
+2. Read the trigger file — it contains the run ID and SHA
+3. Delete the trigger file so the next run doesn't double-fire
+4. Fetch the failed CI run output: `gh run view <run_id> --log-failed`
+5. Identify the breaking commit: read git log, read the commit message, find the corresponding task in backlog.md
+6. Do detective work — read the PRD, the TRD if it exists, understand what feature was being built and what the test was trying to verify
+7. Fix the failure — fix the test (if it was testing wrong assumptions) OR fix the code (if it's genuinely broken). Don't guess — understand intent first.
+8. Branch from main, push the fix, open a PR: `gh pr create --title "fix: [description]" --body "..."`
+9. Log and post Discord summary
+
+## Hard rules
+- Always understand intent before fixing — read the task, PRD, and original PR
+- Never just delete a failing test — understand why it was written before deciding it's wrong
+- Never merge — open a PR and let the Reviewer handle it
+- Delete the trigger file at the start of the run (step 3) to prevent double-firing
+```
+
+---
+
+#### `prompts/pr-ci-fixer.md` — skeleton
+
+```markdown
+# PR CI Fixer
+
+You are the PR CI Fixer — a trigger-based agent that fires every 2 minutes but does nothing unless a PR CI failure signal exists. You investigate failing PR CI runs, understand the task being built, and push a fix directly to the PR branch.
+
+## Wake-up checklist
+1. Check for trigger files matching `/tmp/[your-project]-pr-ci-failed-*`. If none exist, exit immediately — no log needed.
+2. Pick the oldest trigger file. Read it — it contains the PR number, branch name, and run ID.
+3. Delete the trigger file so the next run doesn't double-fire.
+4. Fetch the failed CI output: `gh run view <run_id> --log-failed`
+5. Find the corresponding task in backlog.md. Read its type:
+   - TASK: read the PRD for context on what was being built
+   - AUDIT: read the Issue/Fix fields for what was being fixed
+   - BUG: read Repro/Expected/Actual fields
+6. Check out the branch, understand the failure, fix it, push directly to the PR branch
+7. Log and post Discord summary
+
+## Hard rules
+- Always read the task before fixing — understand what was being built
+- Never delete a failing test — understand why it was written
+- Push directly to the PR branch (not a new branch)
+- Delete the trigger file at the start of the run (step 3) to prevent double-firing
+- If the fix is complex or uncertain, post a Discord message asking for human review instead
+```
+
+---
+
 ### Step 2C: The backlog format
 
 `research/agents/backlog.md` is the single source of truth for all tasks. Start with this template and fill in your first 2–3 Ready tasks:
@@ -775,27 +955,33 @@ Project Manager:  2,32 * * * *                 (every 30 min, offset :02)
 Product Manager:  0 */4 * * *                  (every 4 hours)
 Researcher:       0 7 * * *                    (daily at 7am)
 System Reviewer:  0 21 * * *                   (daily at 9pm)
-Log Trim:         0 */4 * * *                  (every 4 hours — same as Product Manager, different offset if desired)
+Codebase Auditor: 0 */3 * * *                  (every 3 hours)
+Log Trim:         0 */4 * * *                  (every 4 hours)
+Main CI Fixer:    */2 * * * *                  (every 2 min — trigger-based, almost always a no-op)
+PR CI Fixer:      */2 * * * *                  (every 2 min — trigger-based, almost always a no-op)
 ```
 
 **Why the offsets matter:** The Developer fires at :00 and writes a TRD. The TRD Watcher fires at :02 — it sees the TRD almost immediately and can approve it in the same 10-minute window. The Developer fires again at :10, sees the TRD approved, and starts building. Without the offset, the TRD Watcher and Developer would fire at the same time and race.
 
 ### Model assignments
 
-**Use Opus for agents that make complex planning decisions:**
+**Use Opus for agents that make complex planning or judgment decisions:**
 - Product Manager — writing PRDs requires reasoning about user needs, scope, and strategy
 - Project Manager — grooming decisions require roadmap reasoning
 - System Reviewer — auditing logs and scoring 7 dimensions requires careful analysis
+- Reviewer — evaluating code correctness against nuanced standards requires careful judgment
+- Codebase Auditor — finding real violations (not false positives) requires careful reading and judgment
 
 **Use Sonnet for agents that execute against clear instructions:**
 - Developer — coding is structured execution once the TRD is approved
-- Reviewer — applying defined standards to a diff
 - TRD Watcher — checking architectural soundness against a document
 - Merge Watcher — mechanical git operations with some judgment
 - Industry Researcher — search and summarization
 - Log Trim — mechanical file operations
+- Main CI Fixer — the context is handed to it (failed log + task + PRD); fixing tests is structured execution
+- PR CI Fixer — same as Main CI Fixer
 
-Sonnet is faster and cheaper. Opus catches subtle planning mistakes. Mismatch in either direction costs you: Sonnet on Product Manager produces weak PRDs; Opus on Log Trim is pure waste.
+Sonnet is faster and cheaper. Opus catches subtle planning mistakes. Mismatch in either direction costs you: Sonnet on Product Manager produces weak PRDs; Sonnet on Reviewer misses subtle standards violations; Opus on Log Trim is pure waste.
 
 ### The preCommand pattern
 
@@ -843,19 +1029,19 @@ node workspace/memory/setup-db.js
 This creates `workspace/memory/knowledge.db` with three tables:
 - `memories` — arbitrary fact storage with embeddings
 - `entities` — named people, places, organizations
-- `relationships` — edges between entities (e.g. "the user" ↔ "Marcus" → "friends")
+- `relationships` — edges between entities (e.g. "Keith" ↔ "Marcus" → "friends")
 
 ### Writing memories
 
 ```bash
 # Store a fact
-node workspace/memory/remember.js "the user prefers async/await over .then() chains" --type preference --tags "keith,coding" --importance 4
+node workspace/memory/remember.js "Keith prefers async/await over .then() chains" --type preference --tags "keith,coding" --importance 4
 
 # Store a named entity
-node workspace/memory/remember.js --entity "Marcus" --type person --notes "the user's friend, works at biotech startup in SF"
+node workspace/memory/remember.js --entity "Marcus" --type person --notes "Keith's friend, works at biotech startup in SF"
 
 # Store a relationship
-node workspace/memory/remember.js --relationship "the user" "Marcus" "friends" --notes "met at conference"
+node workspace/memory/remember.js --relationship "Keith" "Marcus" "friends" --notes "met at conference"
 ```
 
 **Options:**
@@ -869,10 +1055,10 @@ node workspace/memory/remember.js --relationship "the user" "Marcus" "friends" -
 
 ```bash
 # Semantic search — returns top 5 most relevant memories
-node workspace/memory/recall.js "what does the user like about frontend development?"
+node workspace/memory/recall.js "what does Keith like about frontend development?"
 
 # More results
-node workspace/memory/recall.js "the user's background" --limit 10
+node workspace/memory/recall.js "Keith's background" --limit 10
 
 # Most recent entries
 node workspace/memory/recall.js --recent 20
@@ -897,12 +1083,12 @@ Write a memory when you learn something worth keeping:
   node memory/remember.js "content" --type fact|person|preference --tags "tag1,tag2" --importance 1-5
 
 Recall memories when context from past conversations would help:
-  node memory/recall.js "what is the user working on?"
+  node memory/recall.js "what is Keith working on?"
   node memory/recall.js --recent 20
 
-When to write: facts about the user's life, work, preferences, people he mentions, decisions he makes.
-When to recall: at the start of a new topic, when the user mentions a person or place.
-Don't write: ephemeral task details, project technical state (that belongs in [your-project]-context/).
+When to write: facts about Keith's life, work, preferences, people he mentions, decisions he makes.
+When to recall: at the start of a new topic, when Keith mentions a person or place.
+Don't write: ephemeral task details, project technical state (that belongs in vetware-context/).
 ```
 
 ---
@@ -1216,21 +1402,37 @@ To disable a job without deleting it: set `"enabled": false`. It will still appe
 
 ## Getting Started Checklist
 
+**Discord & harness:**
 - [ ] Create Discord bot (developer portal → new app → bot token → enable Message Content Intent → invite to server)
 - [ ] Clone claude-code-discord-starter, fill in `config/.env`
 - [ ] Symlink or clone your project into `workspace/`
+- [ ] Write `workspace/CLAUDE.md` (identity file for the main Discord session)
+
+**Project repo setup:**
 - [ ] Create the directory structure in `research/agents/` (see Part 2A)
-- [ ] Add agent state files to `.gitignore`
+- [ ] Add agent state files to `.gitignore` (see Part 2A gitignore block)
 - [ ] Write your standards memory files in `workspace/memory/[your-project]-context/`
 - [ ] Write your implementation roadmap at `research/implementation-roadmap.md`
-- [ ] Write all 8 agent prompt files (see Part 2B skeletons)
+- [ ] Write all 11 agent prompt files (developer, reviewer, trd-watcher, project-manager, product-manager, industry-researcher, merge-watcher, system-reviewer, codebase-auditor, main-ci-fixer, pr-ci-fixer)
 - [ ] Have the Product Manager write PRDs for the first 2–3 goals manually before enabling the Developer
 - [ ] Create `research/agents/backlog.md` with 2–3 Ready tasks (with PRD fields filled in)
+
+**Cron configuration:**
 - [ ] Configure `workspace/crons/jobs.json` with all agents, your channel IDs, and schedules
-- [ ] Add agents to `agent-watch.js` AGENTS array
-- [ ] Write `workspace/CLAUDE.md` (identity file for the main Discord session)
-- [ ] If using memory: `node workspace/memory/setup-db.js` and add GEMINI_API_KEY to config/.env
-- [ ] Run `bash start-local.sh` to start the system
+- [ ] Add all agents to `agent-watch.js` AGENTS array
+
+**VPS & CI (optional but recommended):**
+- [ ] Provision a Linux VPS (4GB RAM minimum for one project with CI)
+- [ ] Deploy the discord starter to the VPS; start it inside a persistent tmux session
+- [ ] Install and register a self-hosted GitHub Actions runner on the VPS
+- [ ] Add the `fix-main-on-failure` and `signal-pr-failure` jobs to your CI workflow (see Part 1E)
+- [ ] Verify the runner is active: `cd /path/to/actions-runner && ./run.sh` or run as a service
+
+**Memory (optional):**
+- [ ] `node workspace/memory/setup-db.js` and add GEMINI_API_KEY to config/.env
+
+**Launch:**
+- [ ] Run `bash start-local.sh` (or the equivalent on your VPS) to start the system
 - [ ] Run `node workspace/scripts/agent-watch.js` in a terminal to monitor
 - [ ] Touch `research/agents/PAUSE` before any manual repo changes; remove when done
 - [ ] After the first full cycle, read `agent-log.md` and verify each agent is logging correctly
@@ -1248,3 +1450,8 @@ _(updated nightly by System Reviewer)_
 | 2026-04-14 | 5/5 | 5/5 | 3/5 | 4/5 | 4/5 | 3/5 | **4/5** |
 | 2026-04-17 | 5/5 | 5/5 | 3/5 | 5/5 | 5/5 | 3/5 | **4/5** |
 | 2026-04-18 | 4/5 | 3/5 | 3/5 | 1/5 | 5/5 | 2/5 | **3/5** |
+| 2026-04-19 | 4/5 | 3/5 | 2/5 | 3/5 | 4/5 | 1/5 | **3/5** |
+| 2026-04-20 | 5/5 | 4/5 | 4/5 | 4/5 | 4/5 | 3/5 | **4/5** |
+| 2026-04-23 | 5/5 | 4/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
+| 2026-04-24 | 5/5 | 5/5 | 4/5 | 4/5 | 5/5 | 3/5 | **4/5** |
+| 2026-04-25 | 5/5 | 5/5 | 2/5 | 3/5 | 5/5 | 4/5 | **3/5** |
