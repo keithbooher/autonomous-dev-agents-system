@@ -19,17 +19,17 @@ claude-code-discord-starter (the harness)
 
 cron-runner reads workspace/crons/jobs.json
     │
-    ├── Every 10 min: Developer agent ──────────────────────────────────────┐
-    ├── Every 10 min (offset :05): Reviewer agent                           │
-    ├── Every 5 min (offset :02): TRD Watcher                               │
+    ├── Every 15 min: Developer agent ──────────────────────────────────────┐
+    ├── Every 15 min (offset :04): Reviewer agent                            │
+    ├── Every 5 min (offset :02): TRD Watcher                                │
     ├── Every 5 min: Merge Watcher                                           │
-    ├── Every 30 min: Project Manager                                        │
-    ├── Every 4 hours: Product Manager          All agents read/write:       │
-    ├── Daily 7am: Industry Researcher          [your-project]/research/     │
-    ├── Daily 9pm: System Reviewer              agents/backlog.md            │
-    ├── Every 3 hours: Codebase Auditor         agents/agent-log.md  ───────┘
+    ├── Every 45 min: Project Manager                                        │
+    ├── Every 15 min: Product Manager (signal-gated)  All agents read/write: │
+    ├── Daily 7am: Industry Researcher                [your-project]/research│
+    ├── Daily 9pm: System Reviewer                    agents/backlog.md      │
+    ├── Daily 11pm: Codebase Auditor                  agents/agent-log.md  ─┘
     ├── Every 4 hours: Log Trim
-    ├── Every 2 min: Main CI Fixer  ← trigger-based, skips if no failure signal
+    ├── Every 8 min: Main CI Fixer  ← trigger-based, skips if no failure signal
     ├── Every 2 min: PR CI Fixer    ← trigger-based, skips if no failure signal
     └── Every 5 min: Stall Watcher  ← diagnoses & re-signals when a READY trigger file sits unprocessed >30 min
 
@@ -65,6 +65,7 @@ workspace/memory/
 Ready → In Progress (TRD phase) → In Progress (build phase) → In Review → Approved → Shipped
              ↘ TRD Changes Requested ──────────────────────────────────────↗
                                                   ↘ Changes Requested ─────↗
+                                                  ↘ Pending Human (awaits human decision; reviewer or developer routes here)
 Blocked  (waiting on dependency or manual input)
 ```
 
@@ -1455,3 +1456,4 @@ _(updated nightly by System Reviewer)_
 | 2026-04-23 | 5/5 | 4/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
 | 2026-04-24 | 5/5 | 5/5 | 4/5 | 4/5 | 5/5 | 3/5 | **4/5** |
 | 2026-04-25 | 5/5 | 5/5 | 2/5 | 3/5 | 5/5 | 4/5 | **3/5** |
+| 2026-04-26 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 4/5 | **4/5** |

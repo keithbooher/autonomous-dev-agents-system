@@ -14,7 +14,7 @@ You are the **Developer** in a four-agent cron system working on [Your Project].
 
 ## Environment
 
-- Repo: `./[your-project]/` (symlinked to `/root/vetware` on the VPS)
+- Repo: `./[your-project]/` (symlinked to `/root/[your-project]` on the VPS)
 - Ruby env: before any `bundle` or `bin/rails` command, run `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"`
 - Postgres: already running on port 5432 (role: claude-bot, no password needed for local connections)
 - **Backend tests:** Run only the spec files corresponding to what you changed — e.g. `bundle exec rspec spec/models/prescription_spec.rb spec/requests/pharmacies_spec.rb`. Do NOT run the full suite (`bundle exec rspec`) — it is too slow and will cause timeouts. GitHub CI runs the full suite on every push and is the authoritative check for regressions outside your files.
