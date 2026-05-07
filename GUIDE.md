@@ -19,19 +19,19 @@ claude-code-discord-starter (the harness)
 
 cron-runner reads workspace/crons/jobs.json
     │
-    ├── Every 15 min: Developer agent ──────────────────────────────────────┐
-    ├── Every 15 min (offset :04): Reviewer agent                            │
-    ├── Every 5 min (offset :02): TRD Watcher                                │
-    ├── Every 5 min: Merge Watcher                                           │
-    ├── Every 45 min: Project Manager                                        │
-    ├── Every 15 min: Product Manager (signal-gated)  All agents read/write: │
-    ├── Daily 7am: Industry Researcher                [your-project]/research│
-    ├── Daily 9pm: System Reviewer                    agents/backlog.md      │
-    ├── Daily 11pm: Codebase Auditor                  agents/agent-log.md  ─┘
-    ├── Every 4 hours: Log Trim
-    ├── Every 8 min: Main CI Fixer  ← trigger-based, skips if no failure signal
-    ├── Every 2 min: PR CI Fixer    ← trigger-based, skips if no failure signal
-    └── Every 5 min: Stall Watcher  ← diagnoses & re-signals when a READY trigger file sits unprocessed >30 min
+    ├── Twice an hour (:01,:46): Developer agent ────────────────────────────┐
+    ├── Hourly (:04): Reviewer agent                                         │
+    ├── Twice an hour (:05,:35): TRD Watcher                                 │
+    ├── Every 15 min: Merge Watcher                                          │
+    ├── Every 2h (:07): Project Manager                                      │
+    ├── Twice an hour (:07,:57): Product Manager (signal-gated)              │
+    ├── Daily 7am: Industry Researcher                                       │
+    ├── Daily 9pm: System Reviewer                    All agents read/write: │
+    ├── 4× daily (06,12,18,23): Codebase Auditor      [your-project]/research│
+    ├── Every 4 hours: Log Trim                       agents/backlog.md      │
+    ├── Every 30 min: Main CI Fixer                   agents/agent-log.md  ─┘
+    ├── Every 10 min: PR CI Fixer    ← trigger-based, skips if no failure signal
+    └── Every 6 min: Stall Watcher  ← diagnoses & re-signals when a READY trigger file sits unprocessed >30 min
 
 Your project repo (symlinked into workspace/)
     research/
@@ -948,17 +948,19 @@ All jobs live in `workspace/crons/jobs.json`. This file is read by `cron-runner.
 ### Recommended schedule for each agent type
 
 ```
-Developer:        0,10,20,30,40,50 * * * *    (every 10 min, on the :00)
-Reviewer:         5,15,25,35,45,55 * * * *    (every 10 min, offset :05 — interleaves with Developer)
-TRD Watcher:      2,7,12,17,22,27,32,37,42,47,52,57 * * * *  (every 5 min, offset :02)
-Merge Watcher:    */5 * * * *                  (every 5 min, on the :00/:05/:10...)
-Project Manager:  2,32 * * * *                 (every 30 min, offset :02)
-Product Manager:  0 */4 * * *                  (every 4 hours)
+Developer:        1,26,51 * * * *              (every 25 min, offset :01)
+Reviewer:         4,29,54 * * * *              (every 25 min, offset :04 — interleaves with Developer)
+TRD Watcher:      2,8,14,20,26,32,38,44,50,56 * * * *  (every 6 min, offset :02)
+Merge Watcher:    */5 * * * *                  (every 5 min)
+Project Manager:  3,48 * * * *                 (twice an hour at :03 and :48)
+Product Manager:  7,57 * * * *                 (twice an hour at :07 and :57; signal-gated, almost always a no-op)
 Researcher:       0 7 * * *                    (daily at 7am)
 System Reviewer:  0 21 * * *                   (daily at 9pm)
-Codebase Auditor: 0 */3 * * *                  (every 3 hours)
+Codebase Auditor: 0 23 * * *                   (daily at 11pm)
+Stall Watcher:    3,9,15,21,27,33,39,45,51,57 * * * *  (every 6 min, offset :03)
 Log Trim:         0 */4 * * *                  (every 4 hours)
-Main CI Fixer:    */2 * * * *                  (every 2 min — trigger-based, almost always a no-op)
+Backlog Archive:  15 */4 * * *                 (every 4 hours, offset :15)
+Main CI Fixer:    */8 * * * *                  (every 8 min — trigger-based, almost always a no-op)
 PR CI Fixer:      */2 * * * *                  (every 2 min — trigger-based, almost always a no-op)
 ```
 
@@ -1446,14 +1448,16 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-04-12 | 4/5 | 4/5 | 3/5 | 3/5 | 4/5 | 2/5 | **3/5** |
-| 2026-04-13 | 4/5 | 5/5 | 3/5 | 4/5 | 5/5 | 1/5 | **3/5** |
-| 2026-04-14 | 5/5 | 5/5 | 3/5 | 4/5 | 4/5 | 3/5 | **4/5** |
-| 2026-04-17 | 5/5 | 5/5 | 3/5 | 5/5 | 5/5 | 3/5 | **4/5** |
-| 2026-04-18 | 4/5 | 3/5 | 3/5 | 1/5 | 5/5 | 2/5 | **3/5** |
-| 2026-04-19 | 4/5 | 3/5 | 2/5 | 3/5 | 4/5 | 1/5 | **3/5** |
-| 2026-04-20 | 5/5 | 4/5 | 4/5 | 4/5 | 4/5 | 3/5 | **4/5** |
-| 2026-04-23 | 5/5 | 4/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
 | 2026-04-24 | 5/5 | 5/5 | 4/5 | 4/5 | 5/5 | 3/5 | **4/5** |
 | 2026-04-25 | 5/5 | 5/5 | 2/5 | 3/5 | 5/5 | 4/5 | **3/5** |
 | 2026-04-26 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 4/5 | **4/5** |
+| 2026-04-27 | 2/5 | 5/5 | 4/5 | 3/5 | 5/5 | 4/5 | **3/5** |
+| 2026-04-28 | 1/5 | 5/5 | 4/5 | 3/5 | 5/5 | 4/5 | **2/5** |
+| 2026-04-29 | 4/5 | 5/5 | 5/5 | 5/5 | 5/5 | 4/5 | **4/5** |
+| 2026-04-30 | 4/5 | 5/5 | 5/5 | 5/5 | 3/5 | 4/5 | **4/5** |
+| 2026-05-01 | 5/5 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | **4/5** |
+| 2026-05-02 | 5/5 | n/a | 5/5 | 4/5 | 3/5 | 3/5 | **4/5** |
+| 2026-05-03 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | 4/5 | **4/5** |
+| 2026-05-04 | 5/5 | 4/5 | 4/5 | 3/5 | 3/5 | 3/5 | **4/5** |
+| 2026-05-05 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | 3/5 | **4/5** |
+| 2026-05-06 | 5/5 | 5/5 | 5/5 | 3/5 | 2/5 | 3/5 | **4/5** |

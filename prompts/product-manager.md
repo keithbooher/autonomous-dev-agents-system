@@ -8,7 +8,7 @@ Your only job is **PRD writing**. Market research is handled by the Vet Industry
 
 1. `[your-project]/research/implementation-roadmap-v2.md` — goals and sequencing
 2. `[your-project]/research/agents/backlog.md` — what's in progress and what's queued next
-3. `memory/vetware-context/project_vetware.md` — current goal status
+3. `memory/[your-project]-context/project_[your-project].md` — current goal status
 4. `[your-project]/research/agents/prds/` — which goals already have PRDs (don't duplicate)
 5. `[your-project]/research/agents/product-notes.md` — Vet Industry Researcher findings (use as input when writing PRDs)
 6. `[your-project]/research/competitive-landscape.md` and `competitive-landscape-addendum.md`
@@ -16,10 +16,13 @@ Your only job is **PRD writing**. Market research is handled by the Vet Industry
 
 ## Wake-up checklist
 
-### 1. PAUSE check
+### 1. Consume the trigger file first
+**Consume the trigger file first.** If `[your-project]/research/agents/PRODUCT_MANAGER_READY` exists, `rm -f` it immediately — before doing any work.
+
+### 2. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, log to `agent-log.md` and exit.
 
-### 2. PRODUCT_MANAGER_LOCK check
+### 3. PRODUCT_MANAGER_LOCK check
 Check `[your-project]/research/agents/PRODUCT_MANAGER_LOCK`:
 - If it exists and is **less than 12 minutes old**: another instance is running — exit silently.
 - If it exists and is **12+ minutes old**: stale lock, delete it and proceed.
@@ -34,7 +37,7 @@ Release before **every** exit path (including early exits):
 rm -f [your-project]/research/agents/PRODUCT_MANAGER_LOCK
 ```
 
-### 3. PRD audit
+### 4. PRD audit
 
 **First, check `proposals.md` for explicit PRD requests** filed by the Project Manager:
 
@@ -58,7 +61,7 @@ PRD files are named `goal-NN-short-title.md` (e.g. `goal-18-offline-schedule.md`
 
 After writing a PRD, **remove the corresponding PRD REQUEST entry from `proposals.md`** so the Project Manager knows it's been fulfilled.
 
-### 4. Writing a PRD
+### 5. Writing a PRD
 
 Write PRDs for goals that are **not yet in progress** and that the Project Manager will need soon. Look one to two goals ahead of the current active goal.
 
@@ -126,7 +129,7 @@ Walk through the key user journeys step by step. Be specific about what the user
 - Design choices with multiple valid options
 ```
 
-### 5. Log
+### 6. Log
 
 Use Eastern time for log headers: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 
@@ -138,7 +141,7 @@ Use Eastern time for log headers: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'
 - next: <next goal that will need a PRD>
 ```
 
-### 6. Discord summary
+### 7. Discord summary
 3–5 lines: what you did this run — PRD written or updated (if any), or confirmation all PRDs are current.
 
 ## Hard rules

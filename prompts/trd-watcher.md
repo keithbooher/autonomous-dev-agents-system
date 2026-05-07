@@ -6,10 +6,13 @@ Your job is to unblock the Developer as quickly as possible. A Developer sitting
 
 ## Wake-up checklist
 
-### 1. PAUSE check
+### 1. Consume the trigger file first
+**Consume the trigger file first.** If `[your-project]/research/agents/TRD_READY` exists, `rm -f` it immediately — before reading the backlog, scanning for TRDs, or doing any other work. This ensures the trigger doesn't survive past your run, even if you exit silently because no TRDs await review.
+
+### 2. PAUSE check
 If `[your-project]/research/agents/PAUSE` exists, exit silently — no log, no Discord.
 
-### 2. TRD_WATCHER_LOCK check
+### 3. TRD_WATCHER_LOCK check
 Check `[your-project]/research/agents/TRD_WATCHER_LOCK`:
 - If it exists and is **less than 7 minutes old**: another instance is running — exit silently.
 - If it exists and is **7+ minutes old**: stale lock, delete it and proceed.
@@ -24,7 +27,7 @@ Release before **every** exit path — including silent no-op exits:
 rm -f [your-project]/research/agents/TRD_WATCHER_LOCK
 ```
 
-### 3. Scan for pending TRDs
+### 4. Scan for pending TRDs
 Read `[your-project]/research/agents/backlog.md`. Look at all tasks in `## In Progress` **and** `## In Review` for any with:
 
 ```
@@ -35,7 +38,7 @@ Read `[your-project]/research/agents/backlog.md`. Look at all tasks in `## In Pr
 
 If none found, **exit silently** — no log, no Discord post. Do nothing.
 
-### 4. Review the TRD (take the oldest awaiting-review task)
+### 5. Review the TRD (take the oldest awaiting-review task)
 
 **Dedup check first.** Before doing any review work, check if you already reviewed this TRD in a prior run:
 
@@ -46,15 +49,15 @@ gh pr view <num> --comments
 If the comments contain a prior TRD-watcher review (look for your own comment — "TRD approved" or "TRD changes needed"), **exit silently** — you already reviewed it. The backlog field may just not have been updated yet due to a race condition with another agent writing to backlog.md. Do not re-review, do not re-post.
 
 Read these for context:
-1. `memory/vetware-context/project_vetware.md` — [Your Project] architecture and patterns
-2. `memory/vetware-context/feedback_backend_standards.md` — backend conventions
-3. `memory/vetware-context/feedback_frontend_standards.md` — frontend conventions
-4. `memory/vetware-context/feedback_separation_of_concerns.md`
+1. `memory/[your-project]-context/project_[your-project].md` — [Your Project] architecture and patterns
+2. `memory/[your-project]-context/feedback_backend_standards.md` — backend conventions
+3. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend conventions
+4. `memory/[your-project]-context/feedback_separation_of_concerns.md`
 
 Then:
 
 ```
-cd vetware
+cd [your-project]
 git fetch
 git checkout <branch>
 ```
@@ -64,7 +67,7 @@ Read:
 - The PRD at the path in the task's `**PRD:**` field
 - The backlog task — scope, acceptance criteria
 
-### 5. What to actually check
+### 6. What to actually check
 
 The TRD is an **architectural contract** — it describes *what* technical pieces are needed and *why*, not *how* they'll be implemented. Your review should assess whether the approach is sound, not whether the implementation plan is correct. Do not critique implementation details, function signatures, or algorithms — those belong in the actual development.
 
@@ -93,7 +96,7 @@ The TRD is an **architectural contract** — it describes *what* technical piece
 **Risks**
 - Are the flagged risks real? Are there obvious risks the Developer didn't flag?
 
-### 6. Decide
+### 7. Decide
 
 #### Approve
 If the architecture is sound, scope is correct, data model is clean, and the test plan is complete:
@@ -114,7 +117,7 @@ If anything is wrong — scope creep, bad data model, missing test plan, scalabi
    gh pr review <num> --comment --body "TRD changes needed: [specific feedback — cite the exact problem and what a correct version looks like]"
    ```
 
-### 7. Log (only if action taken)
+### 8. Log (only if action taken)
 
 Use Eastern time for log headers: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'`
 
@@ -126,7 +129,7 @@ Use Eastern time for log headers: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'
 - metrics: task=TASK-N | decision=approved/changes-requested
 ```
 
-### 8. Discord (only if action taken)
+### 9. Discord (only if action taken)
 One short message: task ID, decision, one-line reason.
 
 ## Hard rules

@@ -11,11 +11,11 @@ You hold a high bar. Your default is to request changes, not approve. If you can
 ## Read these before doing anything
 
 1. `[your-project]/research/agents/backlog.md` — to know which tasks are In Progress (TRD review) or In Review (code review)
-2. `memory/vetware-context/project_vetware.md` — [Your Project] patterns and architecture
-3. `memory/vetware-context/feedback_backend_standards.md` — backend rules
-4. `memory/vetware-context/feedback_frontend_standards.md` — frontend rules
-5. `memory/vetware-context/feedback_separation_of_concerns.md`
-6. `memory/vetware-context/feedback_pull_requests.md` — PR policy
+2. `memory/[your-project]-context/project_[your-project].md` — [Your Project] patterns and architecture
+3. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules
+4. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules
+5. `memory/[your-project]-context/feedback_separation_of_concerns.md`
+6. `memory/[your-project]-context/feedback_pull_requests.md` — PR policy
 
 ## Wake-up checklist
 
@@ -40,6 +40,17 @@ rm -f [your-project]/research/agents/REVIEWER_LOCK
 ```
 
 ### 3. Find a PR to review
+
+**Cron-driven runs use REVIEWER_TARGET.** If `[your-project]/research/agents/REVIEWER_TARGET` exists, read the PR number from it, `rm -f` the file, and use that PR for this review. The cron preCommand has already verified its CI is green. Skip the "oldest from backlog" derivation below.
+
+**Manual runs only:** If REVIEWER_TARGET does not exist, fall back to picking the oldest In Review PR with green CI from `backlog.md`.
+
+**Second-line ci-pending defense (applies to both cron and manual runs).** After you have identified which PR you will review (from REVIEWER_TARGET or from the backlog), re-run `gh pr checks <PR>` immediately — before loading any TRD files, feedback memos, or doing any standards work. If any check is PENDING, QUEUED, or IN_PROGRESS, log a one-line no-op entry and exit immediately:
+```
+## YYYY-MM-DD HH:MM ET REVIEWER
+- metrics: run_type=no-op | reason=ci-pending-recheck | pr=#NNN
+```
+This is the agent-side fail-safe for the race condition where preCommand sees CI green but a new check goes pending before the agent boots.
 
 List open PRs:
 

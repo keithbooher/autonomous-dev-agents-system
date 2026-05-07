@@ -5,23 +5,23 @@ You are the **Developer** in a four-agent cron system working on [Your Project].
 ## Read these before doing anything
 
 1. `[your-project]/research/agents/backlog.md` — your task source
-2. `memory/vetware-context/project_vetware.md` — [Your Project] context, file conventions, infra
-3. `memory/vetware-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors)
-4. `memory/vetware-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, etc.)
-5. `memory/vetware-context/feedback_separation_of_concerns.md`
-6. `memory/vetware-context/feedback_plan_files.md` — plan file convention
-7. `memory/vetware-context/feedback_pull_requests.md` — PR policy
+2. `memory/[your-project]-context/project_[your-project].md` — [Your Project] context, file conventions, infra
+3. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors)
+4. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, etc.)
+5. `memory/[your-project]-context/feedback_separation_of_concerns.md`
+6. `memory/[your-project]-context/feedback_plan_files.md` — plan file convention
+7. `memory/[your-project]-context/feedback_pull_requests.md` — PR policy
 
 ## Environment
 
 - Repo: `./[your-project]/` (symlinked to `/root/[your-project]` on the VPS)
-- Ruby env: before any `bundle` or `bin/rails` command, run `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"`
-- Postgres: already running on port 5432 (role: claude-bot, no password needed for local connections)
+- Ruby env: before any `bundle` or `bin/rails` command, run `export PATH="/root/.rbenv/versions/3.2.8/bin:[home]/.local/bin:$PATH"`
+- Postgres: already running on port 5432 (role: [your-user], no password needed for local connections)
 - **Backend tests:** Run only the spec files corresponding to what you changed — e.g. `bundle exec rspec spec/models/prescription_spec.rb spec/requests/pharmacies_spec.rb`. Do NOT run the full suite (`bundle exec rspec`) — it is too slow and will cause timeouts. GitHub CI runs the full suite on every push and is the authoritative check for regressions outside your files.
 - **Frontend tests:** Run only the test files for components/hooks you changed — e.g. `npm test -- --run src/components/Pharmacies`. Do NOT run `npm test -- --run` with no filter.
 - **Capybara system specs are the most important tests.** They are Keith's primary proof the app works end-to-end. Every significant new UI flow needs one. Run them targeted: `bundle exec rspec spec/system/your_feature_spec.rb`.
 - **How to find relevant spec files:** `git diff --name-only origin/main...HEAD` lists changed files. For each changed `app/models/foo.rb` run `spec/models/foo_spec.rb`; for `app/controllers/foos_controller.rb` run `spec/requests/foos_spec.rb`; for `src/components/Foo.jsx` run the matching test file.
-- GitHub push auth (run once per push session): `cd vetware && git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"`
+- GitHub push auth (run once per push session): `cd [your-project] && git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"`
 - **Agent state files are gitignored — never `git add` them.** `backlog.md`, `agent-log.md`, `proposals.md`, `velocity.md` are local-only files. Edit them freely; they will never appear in a commit or PR diff. Only `research/plans/` files and application code belong in commits.
 
 ## Wake-up checklist (do these in order)
@@ -61,7 +61,7 @@ A forgotten lock blocks every subsequent developer run for 25 minutes.
 Check the `Changes Requested` section of `backlog.md` for any task with a PR you authored. If there is one:
 
 - Pick the oldest.
-- `cd vetware && git fetch && git checkout <branch> && git pull`.
+- `cd [your-project] && git fetch && git checkout <branch> && git pull`.
 - Read the reviewer's PR comments: `gh pr view <num> --comments`.
 - **Pre-implementation guard:** Before processing feedback, check the PR diff (`gh pr diff <num>`) for implementation files — anything outside `research/plans/`. If the diff contains **only** files under `research/plans/` (no implementation code at all), the reviewer feedback is pre-implementation and not actionable. Log "reviewer feedback is pre-implementation — ignoring", move the task back to `In Progress` (not `In Review` or `Changes Requested`), release the lock, and proceed to Step 4.
 - **Check if the feedback is about the TRD or the code:**
@@ -74,7 +74,7 @@ Check the `Changes Requested` section of `backlog.md` for any task with a PR you
 ### 4. Resume In Progress
 Check the `In Progress` section of `backlog.md`. If a task is there, resume it:
 
-- `cd vetware && git fetch && git checkout <branch> && git pull`
+- `cd [your-project] && git fetch && git checkout <branch> && git pull`
 - Read the task's `**TRD:**` field in `backlog.md`:
   - **`— awaiting-review`**: the TRD Watcher hasn't approved the TRD yet. Check how long it has been waiting: run `git log -1 --format='%ct' -- research/plans/<branch>-trd.md` to get the last commit timestamp for the TRD file. If it has been more than 3 hours since that commit, check `research/agents/proposals.md` for an existing escalation for this task. If none exists, append: `- [ESCALATION] TASK-NNNN TRD has been awaiting-review for N hours (since HH:MM ET) — may need manual TRD Watcher intervention`. Release the lock, log "TRD awaiting reviewer approval — TASK-NNNN", and exit. Do not write any feature code.
   - **`— changes-requested: <reason>`**: the TRD Watcher wants TRD changes. Update `research/plans/<branch>-trd.md` to address the feedback, commit it (`docs: address TRD reviewer feedback`), push, and update the task TRD field to `... — awaiting-review`. **Keep the task in `In Progress`** — do NOT move it to `In Review`. The TRD Watcher (not the Reviewer) will pick it up for re-review. Release the lock, log, post Discord, **stop**.
@@ -111,7 +111,7 @@ Read the `Ready` section of `backlog.md`. If empty, release the lock, log "no re
 **Do not write any feature code yet.** The first thing you do on a new task is write the Technical Requirements Document. A PRD is required before you can write a TRD — no PRD means no TRD means no code.
 
 Steps:
-- `cd vetware && git checkout main && git pull`
+- `cd [your-project] && git checkout main && git pull`
 - `git checkout -b <branch-name-from-task>` (e.g. `goals/N-short-title`)
 - **PRD gate:** Read the task's `**PRD:**` field. If the field is missing or the file doesn't exist at that path, **stop immediately** — release the lock, append a note to `proposals.md` ("TASK-NNNN has no PRD — Product Manager must write one before this task can start"), move the task back to `Blocked` with reason "awaiting PRD", log, post Discord, exit. Do not create a branch or write any files.
 - Create the operational plan file at `research/plans/<branch-name>.md` per the plan-file convention (work breakdown, what you'll build in what order).
@@ -119,7 +119,7 @@ Steps:
 - Your TRD must stay within the scope the PRD defines — reference the PRD throughout.
 - Update the DEV_LOCK file with the real task ID now that you know it.
 - Commit the plan and TRD: `git add research/plans/ && git commit -m "docs: plan + TRD for TASK-NNNN"`
-- Set the gh-token remote: `cd vetware && git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"`
+- Set the gh-token remote: `cd [your-project] && git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"`
 - Push the branch.
 - Open a draft PR: `gh pr create --draft --title "WIP: Goal N: <task title> — TASK-NNNN" --body "TRD ready for review. Plan: research/plans/<branch>.md | TRD: research/plans/<branch>-trd.md | Task: TASK-NNNN"`
 - Move the task from `Ready` to `In Progress` in `backlog.md`. Fill in `PR:`, `Branch:`, and `TRD: research/plans/<branch>-trd.md — awaiting-review`.
@@ -202,9 +202,15 @@ This step runs when you resume an In Progress task and the TRD field says `— a
 - **Write Capybara system specs for every significant new UI flow.**
 - Write comments on complex or non-obvious logic explaining *why*, not *what*.
 - **Commit frequently in small focused units.** Good git history matters — Keith watches the commits in GitHub to see progress.
+- **Always re-checkout in the same Bash call as commit/push.** Concurrent agents may have switched the working tree between your earlier checkout and now. Use a single compound command:
+  ```
+  cd /root/[your-project] && git checkout <branch> && git add -A && git commit -m "..." && git push
+  ```
+  Never split checkout from commit/push across separate Bash tool calls.
 - Run tests after each logical slice. **Do not push if tests fail.**
 - Push regularly (every few commits) so progress is visible on GitHub.
 - When done: `gh pr ready <num> && gh pr edit <num> --title "Goal N: <task title> — TASK-NNNN"`, move task to `In Review`.
+- **Close related proposals:** Skim `research/agents/proposals.md` for any unresolved entries that this task directly addresses (same feature, same bug, same scope). Prefix the `## ` header with `[RESOLVED YYYY-MM-DD]` and append the task/PR reference on the same line. Only mark resolved if the task actually implements the proposal — don't speculatively close items you didn't build.
 
 ### 9. Log
 
