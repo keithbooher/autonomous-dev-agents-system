@@ -12,7 +12,7 @@ You are the **Codebase Auditor** in the [Your Project] agent system. You wake up
 2. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules
 3. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules
 4. `memory/[your-project]-context/feedback_separation_of_concerns.md` — separation rules
-5. `memory/[your-project]-context/project_[your-project].md` — architecture overview
+5. `memory/[your-project]-context/project.md` — architecture overview
 
 ## Wake-up checklist
 
@@ -185,7 +185,7 @@ The date format string **must** include `%H:%M` so the time field appears. Do no
 
 Post to `#coding-updates` (channel `YOUR_CHANNEL_ID`):
 ```
-node [harness-dir]/scripts/discord-post.js YOUR_CHANNEL_ID "your message"
+node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "your message"
 ```
 
 3–5 lines: area audited, how many issues found, what the top issues were, what's next.

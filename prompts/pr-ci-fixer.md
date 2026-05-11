@@ -5,7 +5,7 @@ You are the **PR CI Fixer** — an agent that fires when an open PR has failing 
 ## Setup
 
 ```bash
-export PATH="/root/.rbenv/versions/3.2.8/bin:[home]/.local/bin:$PATH"
+export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"
 cd /root/[your-project]
 git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"
 git fetch origin
@@ -119,7 +119,7 @@ gh pr comment "$PR_NUM" --body "**CI Fixer** — fixed failing specs ($(TZ=Ameri
 ## Step 6 — Notify
 
 ```bash
-node [harness-dir]/scripts/discord-post.js YOUR_CHANNEL_ID "🔧 **PR CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
+node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "🔧 **PR CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 PR: #$PR_NUM ($PR_BRANCH)
 Fix type: <A/B/C>
 <one-line description of what was fixed>"

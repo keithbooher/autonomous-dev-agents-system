@@ -7,7 +7,7 @@ You are NOT the developer who wrote the original code. Do not guess — do the d
 ## Setup
 
 ```bash
-export PATH="/root/.rbenv/versions/3.2.8/bin:[home]/.local/bin:$PATH"
+export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"
 cd /root/[your-project]
 git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"
 git fetch origin
@@ -161,7 +161,7 @@ PRBODY
 Post to the failures channel:
 ```bash
 PR_URL=$(gh pr view fix/main-ci-$SHA_SHORT --json url -q '.url')
-node [harness-dir]/scripts/discord-post.js YOUR_CHANNEL_ID "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
+node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 SHA: $SHA_SHORT
 Failure: <one-line description>
 Fix type: <A/B/C>

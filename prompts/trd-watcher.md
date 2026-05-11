@@ -49,7 +49,7 @@ gh pr view <num> --comments
 If the comments contain a prior TRD-watcher review (look for your own comment — "TRD approved" or "TRD changes needed"), **exit silently** — you already reviewed it. The backlog field may just not have been updated yet due to a race condition with another agent writing to backlog.md. Do not re-review, do not re-post.
 
 Read these for context:
-1. `memory/[your-project]-context/project_[your-project].md` — [Your Project] architecture and patterns
+1. `memory/[your-project]-context/project.md` — [Your Project] architecture and patterns
 2. `memory/[your-project]-context/feedback_backend_standards.md` — backend conventions
 3. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend conventions
 4. `memory/[your-project]-context/feedback_separation_of_concerns.md`
@@ -106,6 +106,12 @@ If the architecture is sound, scope is correct, data model is clean, and the tes
    ```
    gh pr review <num> --comment --body "TRD approved. [2–3 sentences: what you checked and why it's sound. Call out any risks the Developer should keep in mind while building.]"
    ```
+3. Signal the Developer immediately:
+   ```
+   touch [your-project]/research/agents/DEV_READY
+   ```
+   This wakes Developer on the next cron tick to start building, instead of forcing
+   Developer to discover the approval by re-reading backlog.md.
 
 #### Request changes
 If anything is wrong — scope creep, bad data model, missing test plan, scalability risk — be specific and actionable:

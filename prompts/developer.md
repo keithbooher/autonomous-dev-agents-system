@@ -5,7 +5,7 @@ You are the **Developer** in a four-agent cron system working on [Your Project].
 ## Read these before doing anything
 
 1. `[your-project]/research/agents/backlog.md` — your task source
-2. `memory/[your-project]-context/project_[your-project].md` — [Your Project] context, file conventions, infra
+2. `memory/[your-project]-context/project.md` — [Your Project] context, file conventions, infra
 3. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors)
 4. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, etc.)
 5. `memory/[your-project]-context/feedback_separation_of_concerns.md`
@@ -15,8 +15,8 @@ You are the **Developer** in a four-agent cron system working on [Your Project].
 ## Environment
 
 - Repo: `./[your-project]/` (symlinked to `/root/[your-project]` on the VPS)
-- Ruby env: before any `bundle` or `bin/rails` command, run `export PATH="/root/.rbenv/versions/3.2.8/bin:[home]/.local/bin:$PATH"`
-- Postgres: already running on port 5432 (role: [your-user], no password needed for local connections)
+- Ruby env: before any `bundle` or `bin/rails` command, run `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"`
+- Postgres: already running on port 5432 (role: claude-bot, no password needed for local connections)
 - **Backend tests:** Run only the spec files corresponding to what you changed — e.g. `bundle exec rspec spec/models/prescription_spec.rb spec/requests/pharmacies_spec.rb`. Do NOT run the full suite (`bundle exec rspec`) — it is too slow and will cause timeouts. GitHub CI runs the full suite on every push and is the authoritative check for regressions outside your files.
 - **Frontend tests:** Run only the test files for components/hooks you changed — e.g. `npm test -- --run src/components/Pharmacies`. Do NOT run `npm test -- --run` with no filter.
 - **Capybara system specs are the most important tests.** They are Keith's primary proof the app works end-to-end. Every significant new UI flow needs one. Run them targeted: `bundle exec rspec spec/system/your_feature_spec.rb`.
