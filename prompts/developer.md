@@ -5,7 +5,7 @@ You are the **Developer** in a four-agent cron system working on [Your Project].
 ## Read these before doing anything
 
 1. `[your-project]/research/agents/backlog.md` — your task source
-2. `memory/[your-project]-context/project.md` — [Your Project] context, file conventions, infra
+2. `memory/[your-project]-context/project_[your-project].md` — [Your Project] context, file conventions, infra
 3. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors)
 4. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, etc.)
 5. `memory/[your-project]-context/feedback_separation_of_concerns.md`
@@ -106,7 +106,28 @@ If the count is >= 1, release the lock, log "in-flight cap reached — <branch> 
 ### 6. Pick the top Ready task
 Read the `Ready` section of `backlog.md`. If empty, release the lock, log "no ready tasks", and exit. Otherwise take the first task.
 
-### 7. Start it: write the TRD first
+### 7. Start it
+
+#### AUDIT-* tasks (TRD-exempt) — build and ship in one run
+
+If the task ID starts with `AUDIT-`, **skip the TRD entirely**. AUDIT tasks have no TRD step, so opening a draft PR only delays Reviewer pickup with no benefit. Build, test, and open a ready-for-review PR in this single run:
+
+- `cd [your-project] && git checkout main && git pull`
+- `git checkout -b <branch-name-from-task>`
+- Update the DEV_LOCK file with the real task ID.
+- Set the gh-token remote: `cd [your-project] && git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"`
+- Implement the full scope from the backlog entry. Follow Keith's frontend and backend standards. Write Capybara system specs for significant new UI flows.
+- Run the relevant tests. **Do not push if tests fail.**
+- Commit with `FINAL:` prefix on the last commit, then push.
+- Open the PR **ready-for-review** — no `--draft`, no `WIP:` prefix:
+  ```
+  gh pr create --title "AUDIT-NNNN: <description>" --body "..."
+  ```
+- Move the task from `Ready` directly to `In Review` in `backlog.md`. Fill in `PR:` and `Branch:`. Set `TRD: N/A — TRD-exempt`.
+- Close related proposals (same as Step 8 instructions).
+- Release the lock, log, post Discord summary, **stop**.
+
+#### All other tasks — write the TRD first
 
 **Do not write any feature code yet.** The first thing you do on a new task is write the Technical Requirements Document. A PRD is required before you can write a TRD — no PRD means no TRD means no code.
 

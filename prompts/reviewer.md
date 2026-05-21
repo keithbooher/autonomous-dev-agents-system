@@ -11,7 +11,7 @@ You hold a high bar. Your default is to request changes, not approve. If you can
 ## Read these before doing anything
 
 1. `[your-project]/research/agents/backlog.md` — to know which tasks are In Progress (TRD review) or In Review (code review)
-2. `memory/[your-project]-context/project.md` — [Your Project] patterns and architecture
+2. `memory/[your-project]-context/project_[your-project].md` — [Your Project] patterns and architecture
 3. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules
 4. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules
 5. `memory/[your-project]-context/feedback_separation_of_concerns.md`
@@ -78,6 +78,57 @@ If none meet this criteria, this is a **no-op run**. Release the lock and append
 - metrics: run_type=no-op | reason=<why: no PRs in review / all drafts / all TRD-only / dedup>
 ```
 Do NOT post to Discord on no-op — just log. Then exit.
+
+### 3a. Zombie-audit-PR check (AUDIT-* branches only)
+
+After identifying which PR you will review, **if and only if** the PR is on an `AUDIT-*` branch authored by `claude` (not a human), run a zombie check before doing any review work.
+
+**Step 1 — Confirm it's a claude-authored AUDIT branch:**
+```
+gh pr view <num> --json headRefName,author --jq '{branch: .headRefName, author: .author.login}'
+```
+If the branch name does **not** match `^AUDIT-\d+` or the author is not `claude`, skip this section entirely and proceed to step 4.
+
+**Step 2 — Check the diff against main:**
+```
+git fetch origin
+git diff origin/main...origin/<branch-name>
+```
+
+**Zombie condition (either triggers auto-close):**
+- (a) The diff is **empty** — no changes remain between the AUDIT branch and main.
+- (b) The diff consists **only** of test deletions where those same tests already exist on `origin/main` — i.e., the PR would delete tests that a prior commit already added.
+
+**Step 3 — If zombie condition is met:**
+
+1. Find the commit on main that shipped the fix:
+```
+AUDIT_NUM=<e.g. AUDIT-0250>
+git log origin/main --oneline --grep="$AUDIT_NUM" | head -3
+# If nothing, try: git log origin/main --oneline -20
+```
+
+2. Close the PR with an explanatory comment:
+```
+gh pr close <num> --comment "$(cat <<'EOF'
+$AUDIT_NUM already shipped on main via <commit hash and subject>. This PR's diff against origin/main is empty (or would only delete tests that already exist on main). Closing — no changes needed. Backlog task moved to Shipped.
+EOF
+)"
+```
+
+3. Move the backlog task to Shipped:
+```
+python3 [your-project]/research/agents/move-task.py [your-project]/research/agents/backlog.md <AUDIT-NNNN> Shipped
+```
+
+4. Log the action (see step 9 format, decision=`zombie-auto-closed`) and post a brief Discord summary, then **exit**. Do not proceed to steps 4–8.
+
+**Guard rule — zombie auto-close only fires when ALL of the following are true:**
+- Branch name matches `AUDIT-\d+`
+- PR was authored by `claude` (never auto-close human-authored PRs)
+- Diff is empty OR diff only removes tests already present on `origin/main`
+
+If any condition is not met, skip this section and proceed with the normal review.
 
 ### 4. Determine review round
 If the PR has prior review comments from you, this is a **round-2+ review** (a re-review after the Developer addressed feedback). Re-reviews have stricter rules — see Hard Rules below.
@@ -195,9 +246,9 @@ Use Eastern time for log headers: `TZ=America/New_York date '+%Y-%m-%d %H:%M ET'
 ```
 ## YYYY-MM-DD HH:MM ET REVIEWER
 - did: reviewed TRD for TASK-NNNN / reviewed PR #NN (round 1/2/...)
-- decision: trd-approved / trd-changes-requested / changes-requested / approved / pending-human
+- decision: trd-approved / trd-changes-requested / changes-requested / approved / pending-human / zombie-auto-closed
 - standards checked: <list>
-- metrics: run_type=productive | pr=PR-N | round=N | decision=approved/changes-requested | tests_run=pass/fail
+- metrics: run_type=productive | pr=PR-N | round=N | decision=approved/changes-requested/zombie-auto-closed | tests_run=pass/fail
 - next: <what you'd do next run>
 ```
 

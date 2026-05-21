@@ -119,7 +119,7 @@ gh pr comment "$PR_NUM" --body "**CI Fixer** — fixed failing specs ($(TZ=Ameri
 ## Step 6 — Notify
 
 ```bash
-node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "🔧 **PR CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
+node [WORKSPACE_DIR]/scripts/discord-post.js YOUR_CHANNEL_ID "🔧 **PR CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 PR: #$PR_NUM ($PR_BRANCH)
 Fix type: <A/B/C>
 <one-line description of what was fixed>"

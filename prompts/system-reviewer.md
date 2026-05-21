@@ -190,10 +190,9 @@ Common things that drift:
 - Operational files list (new files/directories)
 - Key design decisions (new patterns added to the workflow)
 
-**After posting to Discord**, sync the two public repos.
+**After posting to Discord**, sync the public repo so friends can see the latest system design. The public repo clone lives at `/home/claude-bot/autonomous-dev-agents-system/`.
 
-**A. System guide repo** (`Agent-Crafting-Table/autonomous-dev-agents-system`) — the clone lives at `/home/claude-bot/autonomous-dev-agents-system/`:
-
+Steps:
 1. Copy all prompt files to the public repo, replacing [Your Project]-specific names/paths with `[your-project]` placeholders:
    ```bash
    cp [your-project]/research/agents/prompts/*.md /home/claude-bot/autonomous-dev-agents-system/prompts/
@@ -209,24 +208,6 @@ Common things that drift:
    cd /home/claude-bot/autonomous-dev-agents-system
    git add -A
    git diff --cached --quiet || git commit -m "sync: system updates from nightly review $(TZ=America/New_York date '+%Y-%m-%d')" && git push
-   ```
-
-**B. Kanban board repo** (`Agent-Crafting-Table/keiths-agent-dev-team-kanban-board`) — the clone lives at `/home/claude-bot/keiths-agent-dev-team-kanban-board/`. If the directory does not exist, clone it first:
-   ```bash
-   [ -d /home/claude-bot/keiths-agent-dev-team-kanban-board ] || git clone https://github.com/Agent-Crafting-Table/keiths-agent-dev-team-kanban-board.git /home/claude-bot/keiths-agent-dev-team-kanban-board
-   ```
-
-5. Copy the kanban server files:
-   ```bash
-   cp workspace/kanban/server.js /home/claude-bot/keiths-agent-dev-team-kanban-board/server.js
-   cp workspace/package.json /home/claude-bot/keiths-agent-dev-team-kanban-board/package.json
-   ```
-
-6. Commit and push — only if something changed:
-   ```bash
-   cd /home/claude-bot/keiths-agent-dev-team-kanban-board
-   git add server.js package.json
-   git diff --cached --quiet || git commit -m "sync: kanban server update $(TZ=America/New_York date '+%Y-%m-%d')" && git push
    ```
 
 Also append today's scorecard summary to the bottom of `./autonomous-dev-system-guide.md` under a `## Recent System Health` section (create it if it doesn't exist). Keep only the last 14 days of scores — drop anything older. Format:

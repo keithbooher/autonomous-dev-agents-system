@@ -30,6 +30,26 @@ Parse out:
 - The actual error messages (e.g. `Capybara::ElementNotFound`, `expected to find text...`)
 - Which example descriptions failed
 
+## Step 1.5 — Dedupe check (run before any branch or PR work)
+
+After reading the trigger, before writing any code:
+
+```bash
+SHA_SHORT=$(echo "$SHA" | cut -c1-7)
+EXISTING=$(cd /root/[your-project] && gh pr list --state open --search "fix/main-ci-${SHA_SHORT}" --json number,headRefName --jq '.[].number' 2>/dev/null)
+```
+
+If `$EXISTING` is non-empty:
+1. Do **NOT** open a new fix PR.
+2. Log a `no-op-duplicate-precheck` entry:
+   ```bash
+   TS=$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
+   { echo ''; echo "## $TS MAIN-CI-FIXER"; echo "- did: no-op-duplicate-precheck — existing fix PR #$EXISTING already open for sha $SHA_SHORT"; echo "- metrics: sha=$SHA_SHORT | run_type=no-op | reason=existing-fix-pr | existing_pr=$EXISTING"; } >> /root/[your-project]/research/agents/agent-log.md
+   ```
+3. Exit cleanly. Do not post to Discord if a prior `no-op-duplicate-precheck` was already logged for this SHA.
+
+Only proceed to Step 2 if no open fix PR exists for this SHA.
+
 ## Step 2 — Identify the breaking commit
 
 ```bash
@@ -161,7 +181,7 @@ PRBODY
 Post to the failures channel:
 ```bash
 PR_URL=$(gh pr view fix/main-ci-$SHA_SHORT --json url -q '.url')
-node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
+node [WORKSPACE_DIR]/scripts/discord-post.js 1494841582413938940 "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 SHA: $SHA_SHORT
 Failure: <one-line description>
 Fix type: <A/B/C>
@@ -179,7 +199,10 @@ PR_URL=$(gh pr view fix/main-ci-$SHA_SHORT --json url -q '.url' 2>/dev/null || e
 ## Step 7 — Cleanup
 
 ```bash
-rm -f /tmp/[your-project]-main-ci-failed-claimed /tmp/[your-project]-main-ci-failed-log.txt
+# Do NOT delete /tmp/[your-project]-main-ci-failed-claimed — the cron dedup logic relies on it existing
+# with the same content as /tmp/[your-project]-main-ci-failed to block re-triggering this agent.
+# If you delete it, the cron will keep re-firing every cycle for the same stale run.
+rm -f /tmp/[your-project]-main-ci-failed-log.txt
 git checkout main
 ```
 

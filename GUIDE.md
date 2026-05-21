@@ -19,19 +19,25 @@ claude-code-discord-starter (the harness)
 
 cron-runner reads workspace/crons/jobs.json
     │
-    ├── Twice an hour (:01,:46): Developer agent ────────────────────────────┐
-    ├── Hourly (:04): Reviewer agent                                         │
+    ├── Every 25 min (:01,:26,:51): Developer agent ─────────────────────────┐
+    ├── Every 25 min (:04,:29,:54): Reviewer agent                           │
     ├── Twice an hour (:05,:35): TRD Watcher                                 │
     ├── Every 15 min: Merge Watcher                                          │
-    ├── Every 2h (:07): Project Manager                                      │
+    ├── Every 50 min (:07,:57): Project Manager                              │
     ├── Twice an hour (:07,:57): Product Manager (signal-gated)              │
     ├── Daily 7am: Industry Researcher                                       │
     ├── Daily 9pm: System Reviewer                    All agents read/write: │
     ├── 4× daily (06,12,18,23): Codebase Auditor      [your-project]/research│
-    ├── Every 4 hours: Log Trim                       agents/backlog.md      │
-    ├── Every 30 min: Main CI Fixer                   agents/agent-log.md  ─┘
-    ├── Every 10 min: PR CI Fixer    ← trigger-based, skips if no failure signal
-    └── Every 6 min: Stall Watcher  ← diagnoses & re-signals when a READY trigger file sits unprocessed >30 min
+    ├── Daily 06:00: Production Tester                agents/backlog.md      │
+    ├── Every 6h: Sentry Bug Writer                   agents/agent-log.md  ─┘
+    ├── Weekly Mon 8am: Agent Systems Researcher
+    ├── Every 4 min: Main CI Fixer    ← trigger-based, skips if no failure signal
+    ├── Every 10 min: PR CI Fixer     ← trigger-based, skips if no failure signal
+    ├── Every 6 min: Stall Watcher    ← diagnoses & re-signals when a READY trigger file sits unprocessed >30 min
+    ├── Every 4h: Log Trim + Backlog Archive
+    ├── Every 30 min: Usage Throttle
+    ├── Hourly: Session Compact
+    └── (OFF) Codex Developer — supplemental AUDIT-only dev (every 30 min when enabled)
 
 Your project repo (symlinked into workspace/)
     research/
@@ -950,18 +956,18 @@ All jobs live in `workspace/crons/jobs.json`. This file is read by `cron-runner.
 ```
 Developer:        1,26,51 * * * *              (every 25 min, offset :01)
 Reviewer:         4,29,54 * * * *              (every 25 min, offset :04 — interleaves with Developer)
-TRD Watcher:      2,8,14,20,26,32,38,44,50,56 * * * *  (every 6 min, offset :02)
-Merge Watcher:    */5 * * * *                  (every 5 min)
-Project Manager:  3,48 * * * *                 (twice an hour at :03 and :48)
-Product Manager:  7,57 * * * *                 (twice an hour at :07 and :57; signal-gated, almost always a no-op)
+TRD Watcher:      5,35 * * * *                 (every 30 min, offset :05 — fallback; primary trigger is TRD_READY file)
+Merge Watcher:    */15 * * * *                 (every 15 min — fallback; primary trigger is MW_READY file)
+Project Manager:  7,57 * * * *                 (every 50 min — signal-gated; almost always a no-op without PM_READY)
+Product Manager:  7,57 * * * *                 (every 50 min — signal-gated; almost always a no-op without PRODUCT_MANAGER_READY)
 Researcher:       0 7 * * *                    (daily at 7am)
 System Reviewer:  0 21 * * *                   (daily at 9pm)
-Codebase Auditor: 0 23 * * *                   (daily at 11pm)
+Codebase Auditor: 0 6,12,18,23 * * *           (every ~6 hours)
 Stall Watcher:    3,9,15,21,27,33,39,45,51,57 * * * *  (every 6 min, offset :03)
 Log Trim:         0 */4 * * *                  (every 4 hours)
 Backlog Archive:  15 */4 * * *                 (every 4 hours, offset :15)
-Main CI Fixer:    */8 * * * *                  (every 8 min — trigger-based, almost always a no-op)
-PR CI Fixer:      */2 * * * *                  (every 2 min — trigger-based, almost always a no-op)
+Main CI Fixer:    */4 * * * *                  (every 4 min — trigger-based, almost always a no-op)
+PR CI Fixer:      */10 * * * *                 (every 10 min — trigger-based, almost always a no-op)
 ```
 
 **Why the offsets matter:** The Developer fires at :00 and writes a TRD. The TRD Watcher fires at :02 — it sees the TRD almost immediately and can approve it in the same 10-minute window. The Developer fires again at :10, sees the TRD approved, and starts building. Without the offset, the TRD Watcher and Developer would fire at the same time and race.
@@ -1448,18 +1454,17 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-04-26 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 4/5 | **4/5** |
-| 2026-04-27 | 2/5 | 5/5 | 4/5 | 3/5 | 5/5 | 4/5 | **3/5** |
-| 2026-04-28 | 1/5 | 5/5 | 4/5 | 3/5 | 5/5 | 4/5 | **2/5** |
-| 2026-04-29 | 4/5 | 5/5 | 5/5 | 5/5 | 5/5 | 4/5 | **4/5** |
-| 2026-04-30 | 4/5 | 5/5 | 5/5 | 5/5 | 3/5 | 4/5 | **4/5** |
-| 2026-05-01 | 5/5 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | **4/5** |
-| 2026-05-02 | 5/5 | n/a | 5/5 | 4/5 | 3/5 | 3/5 | **4/5** |
-| 2026-05-03 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | 4/5 | **4/5** |
-| 2026-05-04 | 5/5 | 4/5 | 4/5 | 3/5 | 3/5 | 3/5 | **4/5** |
-| 2026-05-05 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | 3/5 | **4/5** |
-| 2026-05-06 | 5/5 | 5/5 | 5/5 | 3/5 | 2/5 | 3/5 | **4/5** |
 | 2026-05-07 | 4/5 | 5/5 | 5/5 | 3/5 | 2/5 | 2/5 | **3/5** |
 | 2026-05-08 | 4/5 | 5/5 | 5/5 | 2/5 | 2/5 | 3/5 | **3/5** |
 | 2026-05-09 | 5/5 | 5/5 | 5/5 | 4/5 | 3/5 | 2/5 | **4/5** |
 | 2026-05-10 | 5/5 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | **4/5** |
+| 2026-05-11 | 5/5 | 5/5 | 5/5 | 4/5 | 3/5 | 3/5 | **4/5** |
+| 2026-05-12 | 4/5 | n/a | 5/5 | 3/5 | 3/5 | 4/5 | **3/5** |
+| 2026-05-13 | 2/5 | n/a | n/a | 2/5 | 2/5 | 1/5 | **2/5** |
+| 2026-05-14 | 4/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
+| 2026-05-15 | 4/5 | 5/5 | 5/5 | 2/5 | 5/5 | 2/5 | **3/5** |
+| 2026-05-16 | 1/5 | n/a | 5/5 | 1/5 | 5/5 | 1/5 | **2/5** |
+| 2026-05-17 | 4/5 | 4/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
+| 2026-05-18 | 5/5 | n/a | 5/5 | 4/5 | 5/5 | 2/5 | **4/5** |
+| 2026-05-19 | 4/5 | 2/5 | 5/5 | 4/5 | 5/5 | 3/5 | **4/5** |
+| 2026-05-20 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
