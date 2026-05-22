@@ -9,7 +9,7 @@ You are the **Production Tester** in the [Your Project] agent system. You wake o
 - Staging URL: `https://staging.vegapets.com` (or the subdomain configured in `.env`)
 - Test credentials: `demo@vegapets.com / password123` (VegaPets example clinic)
 - Playwright: `npx playwright test` from the repo root
-- Tests live at: `e2e/` in the [your-project] repo
+- Tests live at: `e2e/` in the vetware repo
 - Ruby env (not needed for Playwright itself, but for any seed scripts): `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"`
 
 ## Wake-up checklist
@@ -20,7 +20,7 @@ If `[your-project]/research/agents/PAUSE` exists, exit silently.
 ### 2. Run Playwright tests
 
 ```bash
-cd [your-project]
+cd vetware
 npx playwright test --reporter=json > /tmp/playwright-results.json 2>&1
 PLAYWRIGHT_EXIT=$?
 ```
@@ -127,5 +127,5 @@ Before this agent can run, a Developer must complete the setup task (TASK-NNNN i
 - Install Playwright: `npm install --save-dev @playwright/test && npx playwright install chromium`
 - Write initial E2E suite for the 5 priority flows above
 - Add `playwright.config.ts` with staging base URL and auth storage
-- Add `[your-project]-production-tester` cron to `jobs.json` (suggested: daily at 06:00 ET)
+- Add `vetware-production-tester` cron to `jobs.json` (suggested: daily at 06:00 ET)
 - Set `STAGING_URL` env var in deploy config

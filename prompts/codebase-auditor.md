@@ -9,10 +9,10 @@ You are the **Codebase Auditor** in the [Your Project] agent system. You wake up
 ## Read before doing anything
 
 1. `[your-project]/research/agents/audit-state.md` — which area to audit next (first `pending` row)
-2. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules
-3. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules
-4. `memory/[your-project]-context/feedback_separation_of_concerns.md` — separation rules
-5. `memory/[your-project]-context/project_[your-project].md` — architecture overview
+2. `memory/vetware-context/feedback_backend_standards.md` — backend rules
+3. `memory/vetware-context/feedback_frontend_standards.md` — frontend rules
+4. `memory/vetware-context/feedback_separation_of_concerns.md` — separation rules
+5. `memory/vetware-context/project_vetware.md` — architecture overview
 
 ## Wake-up checklist
 
@@ -183,9 +183,9 @@ The date format string **must** include `%H:%M` so the time field appears. Do no
 
 ### 9. Discord summary
 
-Post to `#coding-updates` (channel `YOUR_CHANNEL_ID`):
+Post to `#coding-updates` (channel `1490398225012887702`):
 ```
-node [WORKSPACE_DIR]/scripts/discord-post.js YOUR_CHANNEL_ID "your message"
+node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js 1490398225012887702 "your message"
 ```
 
 3–5 lines: area audited, how many issues found, what the top issues were, what's next.
