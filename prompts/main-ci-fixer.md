@@ -8,7 +8,7 @@ You are NOT the developer who wrote the original code. Do not guess — do the d
 
 ```bash
 export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"
-cd /root/vetware
+cd /root/[your-project]
 git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"
 git fetch origin
 git checkout main && git pull origin main
@@ -16,7 +16,7 @@ git checkout main && git pull origin main
 
 ## Step 1 — Read the trigger
 
-Read `/tmp/vetware-main-ci-failed-claimed`. It contains: `<github_run_id> <sha>`
+Read `/tmp/[your-project]-main-ci-failed-claimed`. It contains: `<github_run_id> <sha>`
 
 Extract the run ID and SHA. Then fetch the failed test output:
 
@@ -36,7 +36,7 @@ After reading the trigger, before writing any code:
 
 ```bash
 SHA_SHORT=$(echo "$SHA" | cut -c1-7)
-EXISTING=$(cd /root/vetware && gh pr list --state open --search "fix/main-ci-${SHA_SHORT}" --json number,headRefName --jq '.[].number' 2>/dev/null)
+EXISTING=$(cd /root/[your-project] && gh pr list --state open --search "fix/main-ci-${SHA_SHORT}" --json number,headRefName --jq '.[].number' 2>/dev/null)
 ```
 
 If `$EXISTING` is non-empty:
@@ -199,10 +199,10 @@ PR_URL=$(gh pr view fix/main-ci-$SHA_SHORT --json url -q '.url' 2>/dev/null || e
 ## Step 7 — Cleanup
 
 ```bash
-# Do NOT delete /tmp/vetware-main-ci-failed-claimed — the cron dedup logic relies on it existing
-# with the same content as /tmp/vetware-main-ci-failed to block re-triggering this agent.
+# Do NOT delete /tmp/[your-project]-main-ci-failed-claimed — the cron dedup logic relies on it existing
+# with the same content as /tmp/[your-project]-main-ci-failed to block re-triggering this agent.
 # If you delete it, the cron will keep re-firing every cycle for the same stale run.
-rm -f /tmp/vetware-main-ci-failed-log.txt
+rm -f /tmp/[your-project]-main-ci-failed-log.txt
 git checkout main
 ```
 

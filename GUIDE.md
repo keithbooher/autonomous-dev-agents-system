@@ -19,11 +19,11 @@ claude-code-discord-starter (the harness)
 
 cron-runner reads workspace/crons/jobs.json
     │
-    ├── Every 25 min (:01,:26,:51): Developer agent ─────────────────────────┐
-    ├── Every 25 min (:04,:29,:54): Reviewer agent                           │
+    ├── Every 5 min (:01,:06,:11,…): Developer agent ────────────────────────┐
+    ├── Every 5 min (:04,:09,:14,…): Reviewer agent                          │
     ├── Twice an hour (:05,:35): TRD Watcher                                 │
     ├── Every 15 min: Merge Watcher                                          │
-    ├── Every 50 min (:07,:57): Project Manager                              │
+    ├── Every 30 min (:03,:33): Project Manager                              │
     ├── Twice an hour (:07,:57): Product Manager (signal-gated)              │
     ├── Daily 7am: Industry Researcher                                       │
     ├── Daily 9pm: System Reviewer                    All agents read/write: │
@@ -1454,7 +1454,6 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-05-08 | 4/5 | 5/5 | 5/5 | 2/5 | 2/5 | 3/5 | **3/5** |
 | 2026-05-09 | 5/5 | 5/5 | 5/5 | 4/5 | 3/5 | 2/5 | **4/5** |
 | 2026-05-10 | 5/5 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | **4/5** |
 | 2026-05-11 | 5/5 | 5/5 | 5/5 | 4/5 | 3/5 | 3/5 | **4/5** |
@@ -1468,3 +1467,4 @@ _(updated nightly by System Reviewer)_
 | 2026-05-19 | 4/5 | 2/5 | 5/5 | 4/5 | 5/5 | 3/5 | **4/5** |
 | 2026-05-20 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-21 | 4/5 | 5/5 | 4/5 | 3/5 | 5/5 | 2/5 | **3/5** |
+| 2026-05-22 | 4/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
