@@ -9,10 +9,10 @@ You are the **Codebase Auditor** in the [Your Project] agent system. You wake up
 ## Read before doing anything
 
 1. `[your-project]/research/agents/audit-state.md` — which area to audit next (first `pending` row)
-2. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules
-3. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules
-4. `memory/[your-project]-context/feedback_separation_of_concerns.md` — separation rules
-5. `memory/[your-project]-context/project_[your-project].md` — architecture overview
+2. `memory/project-context/feedback_backend_standards.md` — backend rules
+3. `memory/project-context/feedback_frontend_standards.md` — frontend rules
+4. `memory/project-context/feedback_separation_of_concerns.md` — separation rules
+5. `memory/project-context/project_main.md` — architecture overview
 
 ## Wake-up checklist
 

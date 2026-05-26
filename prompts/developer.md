@@ -5,12 +5,12 @@ You are the **Developer** in a four-agent cron system working on [Your Project].
 ## Read these before doing anything
 
 1. `[your-project]/research/agents/backlog.md` — your task source
-2. `memory/[your-project]-context/project_[your-project].md` — [Your Project] context, file conventions, infra
-3. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors)
-4. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, etc.)
-5. `memory/[your-project]-context/feedback_separation_of_concerns.md`
-6. `memory/[your-project]-context/feedback_plan_files.md` — plan file convention
-7. `memory/[your-project]-context/feedback_pull_requests.md` — PR policy
+2. `memory/project-context/project_main.md` — [Your Project] context, file conventions, infra
+3. `memory/project-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors)
+4. `memory/project-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, etc.)
+5. `memory/project-context/feedback_separation_of_concerns.md`
+6. `memory/project-context/feedback_plan_files.md` — plan file convention
+7. `memory/project-context/feedback_pull_requests.md` — PR policy
 
 ## Environment
 

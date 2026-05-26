@@ -1097,7 +1097,7 @@ Recall memories when context from past conversations would help:
 
 When to write: facts about Keith's life, work, preferences, people he mentions, decisions he makes.
 When to recall: at the start of a new topic, when Keith mentions a person or place.
-Don't write: ephemeral task details, project technical state (that belongs in vetware-context/).
+Don't write: ephemeral task details, project technical state (that belongs in project-context/).
 ```
 
 ---
@@ -1454,8 +1454,6 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-05-10 | 5/5 | 5/5 | 5/5 | 4/5 | 4/5 | 3/5 | **4/5** |
-| 2026-05-11 | 5/5 | 5/5 | 5/5 | 4/5 | 3/5 | 3/5 | **4/5** |
 | 2026-05-12 | 4/5 | n/a | 5/5 | 3/5 | 3/5 | 4/5 | **3/5** |
 | 2026-05-13 | 2/5 | n/a | n/a | 2/5 | 2/5 | 1/5 | **2/5** |
 | 2026-05-14 | 4/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
@@ -1468,3 +1466,5 @@ _(updated nightly by System Reviewer)_
 | 2026-05-21 | 4/5 | 5/5 | 4/5 | 3/5 | 5/5 | 2/5 | **3/5** |
 | 2026-05-22 | 4/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-23 | 2/5 | 5/5 | 5/5 | 2/5 | 5/5 | 1/5 | **2/5** |
+| 2026-05-24 | 1/5 | n/a | n/a | 1/5 | 5/5 | 1/5 | **1/5** |
+| 2026-05-25 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
