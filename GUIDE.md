@@ -19,25 +19,28 @@ claude-code-discord-starter (the harness)
 
 cron-runner reads workspace/crons/jobs.json
     │
-    ├── Every 5 min (:01,:06,:11,…): Developer agent ────────────────────────┐
-    ├── Every 5 min (:04,:09,:14,…): Reviewer agent                          │
-    ├── Twice an hour (:05,:35): TRD Watcher                                 │
-    ├── Every 15 min: Merge Watcher                                          │
-    ├── Every 30 min (:03,:33): Project Manager                              │
-    ├── Twice an hour (:07,:57): Product Manager (signal-gated)              │
+    ├── Every 15 min (:01,:26,:51): Developer agent ─────────────────────────┐
+    ├── Every 30 min fallback (:04,:29,:54): Reviewer agent                  │
+    ├── Every 30 min fallback (:05,:35): TRD Watcher                         │
+    ├── Every 15 min fallback: Merge Watcher                                 │
+    ├── Every 45 min (:07,:57): Project Manager                              │
+    ├── Every 20 min (:07,:57): Product Manager (signal-gated)               │
     ├── Daily 7am: Industry Researcher                                       │
+    ├── Daily 10am: Proposals Manager                                        │
     ├── Daily 9pm: System Reviewer                    All agents read/write: │
-    ├── 4× daily (06,12,18,23): Codebase Auditor      [your-project]/research│
+    ├── Every 6h (06,12,18,23): Codebase Auditor      [your-project]/research│
     ├── Daily 06:00: Production Tester                agents/backlog.md      │
     ├── Every 6h: Sentry Bug Writer                   agents/agent-log.md  ─┘
     ├── Weekly Mon 8am: Agent Systems Researcher
+    ├── Every 30 min (:14,:44): Auto-Unblock  ← stall-gated; only acts after 20+ idle cycles
     ├── Every 4 min: Main CI Fixer    ← trigger-based, skips if no failure signal
     ├── Every 10 min: PR CI Fixer     ← trigger-based, skips if no failure signal
     ├── Every 6 min: Stall Watcher    ← diagnoses & re-signals when a READY trigger file sits unprocessed >30 min
     ├── Every 4h: Log Trim + Backlog Archive
     ├── Every 30 min: Usage Throttle
     ├── Hourly: Session Compact
-    └── (OFF) Codex Developer — supplemental AUDIT-only dev (every 30 min when enabled)
+    ├── Daily 11pm: Home session memory sync
+    └── Every 30 min (:08,:38): Codex Developer — supplemental AUDIT-only dev (event-gated)
 
 Your project repo (symlinked into workspace/)
     research/
@@ -1097,7 +1100,7 @@ Recall memories when context from past conversations would help:
 
 When to write: facts about Keith's life, work, preferences, people he mentions, decisions he makes.
 When to recall: at the start of a new topic, when Keith mentions a person or place.
-Don't write: ephemeral task details, project technical state (that belongs in project-context/).
+Don't write: ephemeral task details, project technical state (that belongs in vetware-context/).
 ```
 
 ---
@@ -1454,9 +1457,6 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-05-12 | 4/5 | n/a | 5/5 | 3/5 | 3/5 | 4/5 | **3/5** |
-| 2026-05-13 | 2/5 | n/a | n/a | 2/5 | 2/5 | 1/5 | **2/5** |
-| 2026-05-14 | 4/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-15 | 4/5 | 5/5 | 5/5 | 2/5 | 5/5 | 2/5 | **3/5** |
 | 2026-05-16 | 1/5 | n/a | 5/5 | 1/5 | 5/5 | 1/5 | **2/5** |
 | 2026-05-17 | 4/5 | 4/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
@@ -1468,3 +1468,6 @@ _(updated nightly by System Reviewer)_
 | 2026-05-23 | 2/5 | 5/5 | 5/5 | 2/5 | 5/5 | 1/5 | **2/5** |
 | 2026-05-24 | 1/5 | n/a | n/a | 1/5 | 5/5 | 1/5 | **1/5** |
 | 2026-05-25 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
+| 2026-05-26 | 1/5 | n/a | n/a | 2/5 | 5/5 | 1/5 | **1/5** |
+| 2026-05-27 | 3/5 | 5/5 | 3/5 | 3/5 | 4/5 | 2/5 | **3/5** |
+| 2026-05-28 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 4/5 | **5/5** |
