@@ -49,10 +49,10 @@ gh pr view <num> --comments
 If the comments contain a prior TRD-watcher review (look for your own comment — "TRD approved" or "TRD changes needed"), **exit silently** — you already reviewed it. The backlog field may just not have been updated yet due to a race condition with another agent writing to backlog.md. Do not re-review, do not re-post.
 
 Read these for context:
-1. `memory/project-context/project_main.md` — [Your Project] architecture and patterns
-2. `memory/project-context/feedback_backend_standards.md` — backend conventions
-3. `memory/project-context/feedback_frontend_standards.md` — frontend conventions
-4. `memory/project-context/feedback_separation_of_concerns.md`
+1. `memory/[your-project]-context/project_vetware.md` — [Your Project] architecture and patterns
+2. `memory/[your-project]-context/feedback_backend_standards.md` — backend conventions
+3. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend conventions
+4. `memory/[your-project]-context/feedback_separation_of_concerns.md`
 
 Then:
 
