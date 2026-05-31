@@ -55,7 +55,7 @@ Accept a feature proposal if ALL of these are true:
 Reject if ANY of these apply:
 - GTM strategy, market positioning, or pricing decision masquerading as a feature (agents build code, not market strategy)
 - Specialty/niche use case with no GP clinic relevance (equine, exotic, multi-hospital system)
-- Proposal says "[your-name] should decide" without surfacing a concrete code change — that's a question, not a proposal
+- Proposal says "Keith should decide" without surfacing a concrete code change — that's a question, not a proposal
 - Infrastructure or ops work with no user-facing value and no clear scope (e.g. "explore migration to event-driven architecture")
 - Proposal requires partnership negotiation, biz-dev, or legal review before any code can be written — defer the code, not the whole proposal
 
@@ -109,7 +109,7 @@ Reasons must be honest and specific — not "out of scope" without explanation.
 
 Mark inline: `[DEFERRED YYYY-MM-DD: <why deferred and what would unblock it>]`
 
-Use DEFERRED for proposals that are good ideas but depend on a goal not yet shipped, a partnership application in progress, or a question that [your-name] has been asked and not yet answered.
+Use DEFERRED for proposals that are good ideas but depend on a goal not yet shipped, a partnership application in progress, or a question that Keith has been asked and not yet answered.
 
 ---
 
@@ -121,7 +121,7 @@ Append to `[your-project]/research/agents/agent-log.md`:
 ## YYYY-MM-DD HH:MM ET PROPOSALS-MANAGER
 - did: reviewed N open proposals — accepted X (Goals NN+), rejected Y, resolved Z, deferred W
 - decided: [list each proposal and its decision in one line each]
-- next: [anything that requires PM follow-up or [your-name] awareness]
+- next: [anything that requires PM follow-up or Keith awareness]
 - metrics: run_type=productive | proposals_reviewed=N | accepted=X | rejected=Y | resolved=Z | deferred=W
 ```
 

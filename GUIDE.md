@@ -957,18 +957,27 @@ All jobs live in `workspace/crons/jobs.json`. This file is read by `cron-runner.
 ### Recommended schedule for each agent type
 
 ```
-Developer:        1,26,51 * * * *              (every 25 min, offset :01)
-Reviewer:         4,29,54 * * * *              (every 25 min, offset :04 — interleaves with Developer)
+Developer:        1,6,11,16,21,26,31,36,41,46,51,56 * * * *  (every 5 min, offset :01)
+Codex Developer:  8,33,58 * * * *              (every 25 min, AUDIT-only lane)
+Reviewer:         4,9,14,19,24,29,34,39,44,49,54,59 * * * *  (every 5 min, offset :04 — interleaves with Developer)
 TRD Watcher:      5,35 * * * *                 (every 30 min, offset :05 — fallback; primary trigger is TRD_READY file)
 Merge Watcher:    */15 * * * *                 (every 15 min — fallback; primary trigger is MW_READY file)
-Project Manager:  7,57 * * * *                 (every 50 min — signal-gated; almost always a no-op without PM_READY)
+Project Manager:  3,33 * * * *                 (every 30 min — signal-gated; almost always a no-op without PM_READY)
 Product Manager:  7,57 * * * *                 (every 50 min — signal-gated; almost always a no-op without PRODUCT_MANAGER_READY)
-Researcher:       0 7 * * *                    (daily at 7am)
+Industry Researcher:    0 7 * * *              (daily at 7am)
+Agent Systems Researcher: 0 8 * * 1            (weekly, Monday 8am)
 System Reviewer:  0 21 * * *                   (daily at 9pm)
+Production Tester: 0 6 * * *                   (daily at 6am, against live staging)
 Codebase Auditor: 0 6,12,18,23 * * *           (every ~6 hours)
+Sentry Bug Writer: 0 */6 * * *                 (every 6 hours)
+Proposals Manager: 0 10 * * *                  (daily at 10am)
+Auto-Unblock:     14,44 * * * *                (every 30 min, stall-gated)
 Stall Watcher:    3,9,15,21,27,33,39,45,51,57 * * * *  (every 6 min, offset :03)
+Usage Throttle:   2,32 * * * *                 (every 30 min)
 Log Trim:         0 */4 * * *                  (every 4 hours)
 Backlog Archive:  15 */4 * * *                 (every 4 hours, offset :15)
+Session Compact:  30 * * * *                   (hourly)
+Home Memory Sync: 0 23 * * *                   (daily at 11pm)
 Main CI Fixer:    */4 * * * *                  (every 4 min — trigger-based, almost always a no-op)
 PR CI Fixer:      */10 * * * *                 (every 10 min — trigger-based, almost always a no-op)
 ```
@@ -1100,7 +1109,7 @@ Recall memories when context from past conversations would help:
 
 When to write: facts about Keith's life, work, preferences, people he mentions, decisions he makes.
 When to recall: at the start of a new topic, when Keith mentions a person or place.
-Don't write: ephemeral task details, project technical state (that belongs in vetware-context/).
+Don't write: ephemeral task details, project technical state (that belongs in [your-project]-context/).
 ```
 
 ---
@@ -1457,7 +1466,6 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-05-16 | 1/5 | n/a | 5/5 | 1/5 | 5/5 | 1/5 | **2/5** |
 | 2026-05-17 | 4/5 | 4/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-18 | 5/5 | n/a | 5/5 | 4/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-19 | 4/5 | 2/5 | 5/5 | 4/5 | 5/5 | 3/5 | **4/5** |
@@ -1471,3 +1479,4 @@ _(updated nightly by System Reviewer)_
 | 2026-05-27 | 3/5 | 5/5 | 3/5 | 3/5 | 4/5 | 2/5 | **3/5** |
 | 2026-05-28 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 4/5 | **5/5** |
 | 2026-05-29 | 4/5 | 5/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
+| 2026-05-30 | 5/5 | 5/5 | 4/5 | 5/5 | 5/5 | 2/5 | **4/5** |

@@ -6,7 +6,7 @@ You run **in parallel** with the Claude Developer. Each of you has your own lock
 
 ## Read these before doing anything
 
-1. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/project_vetware.md` — current goals and project context
+1. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/project_[your-project].md` — current goals and project context
 2. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors, Result objects)
 3. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, MUI Grid v7)
 4. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_separation_of_concerns.md` — separation of concerns rules
