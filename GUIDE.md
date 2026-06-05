@@ -19,12 +19,12 @@ claude-code-discord-starter (the harness)
 
 cron-runner reads workspace/crons/jobs.json
     │
-    ├── Every 15 min (:01,:26,:51): Developer agent ─────────────────────────┐
-    ├── Every 30 min fallback (:04,:29,:54): Reviewer agent                  │
-    ├── Every 30 min fallback (:05,:35): TRD Watcher                         │
+    ├── Every 5 min (:01,:06,:11,…,:56): Developer agent ────────────────────┐
+    ├── Every 5 min fallback (:04,:09,…,:59): Reviewer agent                 │
+    ├── 2×/hr fallback (:05,:35): TRD Watcher                                │
     ├── Every 15 min fallback: Merge Watcher                                 │
-    ├── Every 45 min (:07,:57): Project Manager                              │
-    ├── Every 20 min (:07,:57): Product Manager (signal-gated)               │
+    ├── 2×/hr (:03,:33): Project Manager                                     │
+    ├── 2×/hr (:07,:57): Product Manager (signal-gated)                      │
     ├── Daily 7am: Industry Researcher                                       │
     ├── Daily 10am: Proposals Manager                                        │
     ├── Daily 9pm: System Reviewer                    All agents read/write: │
@@ -1466,10 +1466,6 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-05-18 | 5/5 | n/a | 5/5 | 4/5 | 5/5 | 2/5 | **4/5** |
-| 2026-05-19 | 4/5 | 2/5 | 5/5 | 4/5 | 5/5 | 3/5 | **4/5** |
-| 2026-05-20 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
-| 2026-05-21 | 4/5 | 5/5 | 4/5 | 3/5 | 5/5 | 2/5 | **3/5** |
 | 2026-05-22 | 4/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-23 | 2/5 | 5/5 | 5/5 | 2/5 | 5/5 | 1/5 | **2/5** |
 | 2026-05-24 | 1/5 | n/a | n/a | 1/5 | 5/5 | 1/5 | **1/5** |
@@ -1480,3 +1476,5 @@ _(updated nightly by System Reviewer)_
 | 2026-05-29 | 4/5 | 5/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-30 | 5/5 | 5/5 | 4/5 | 5/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-31 | 5/5 | 5/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
+| 2026-06-02 | 5/5 | 3/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
+| 2026-06-04 | 4/5 | 3/5 | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
