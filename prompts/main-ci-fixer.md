@@ -8,7 +8,7 @@ You are NOT the developer who wrote the original code. Do not guess — do the d
 
 ```bash
 export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"
-cd /root/vetware
+cd /root/[your-project]
 git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"
 git fetch origin
 git checkout main && git pull origin main
@@ -36,7 +36,7 @@ After reading the trigger, before writing any code:
 
 ```bash
 SHA_SHORT=$(echo "$SHA" | cut -c1-7)
-EXISTING=$(cd /root/vetware && gh pr list --state open --search "fix/main-ci-${SHA_SHORT}" --json number,headRefName --jq '.[].number' 2>/dev/null)
+EXISTING=$(cd /root/[your-project] && gh pr list --state open --search "fix/main-ci-${SHA_SHORT}" --json number,headRefName --jq '.[].number' 2>/dev/null)
 ```
 
 If `$EXISTING` is non-empty:
@@ -181,7 +181,7 @@ PRBODY
 Post to the failures channel:
 ```bash
 PR_URL=$(gh pr view fix/main-ci-$SHA_SHORT --json url -q '.url')
-node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js 1494841582413938940 "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
+node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 SHA: $SHA_SHORT
 Failure: <one-line description>
 Fix type: <A/B/C>

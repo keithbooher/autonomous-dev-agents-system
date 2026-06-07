@@ -6,7 +6,7 @@ You are the **PR CI Fixer** — an agent that fires when an open PR has failing 
 
 ```bash
 export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"
-cd /root/vetware
+cd /root/[your-project]
 git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"
 git fetch origin
 ```

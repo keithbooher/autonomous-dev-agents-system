@@ -1434,7 +1434,7 @@ To disable a job without deleting it: set `"enabled": false`. It will still appe
 - [ ] Add agent state files to `.gitignore` (see Part 2A gitignore block)
 - [ ] Write your standards memory files in `workspace/memory/[your-project]-context/`
 - [ ] Write your implementation roadmap at `research/implementation-roadmap.md`
-- [ ] Write all 11 agent prompt files (developer, reviewer, trd-watcher, project-manager, product-manager, industry-researcher, merge-watcher, system-reviewer, codebase-auditor, main-ci-fixer, pr-ci-fixer)
+- [ ] Write all 15 agent prompt files (developer, reviewer, trd-watcher, project-manager, product-manager, industry-researcher, system-reviewer, codebase-auditor, main-ci-fixer, pr-ci-fixer, production-tester, sentry-bug-writer, proposals-manager, agent-systems-researcher, codex-developer)
 - [ ] Have the Product Manager write PRDs for the first 2–3 goals manually before enabling the Developer
 - [ ] Create `research/agents/backlog.md` with 2–3 Ready tasks (with PRD fields filled in)
 
@@ -1466,7 +1466,6 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-05-22 | 4/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-05-23 | 2/5 | 5/5 | 5/5 | 2/5 | 5/5 | 1/5 | **2/5** |
 | 2026-05-24 | 1/5 | n/a | n/a | 1/5 | 5/5 | 1/5 | **1/5** |
 | 2026-05-25 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
@@ -1478,3 +1477,5 @@ _(updated nightly by System Reviewer)_
 | 2026-05-31 | 5/5 | 5/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
 | 2026-06-02 | 5/5 | 3/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
 | 2026-06-04 | 4/5 | 3/5 | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
+| 2026-06-05 | 4/5 | 5/5 | 4/5 | 2/5 | 5/5 | 2/5 | **3/5** |
+| 2026-06-06 | 1/5 | 3/5 | 3/5 | 1/5 | 4/5 | 1/5 | **1/5** |

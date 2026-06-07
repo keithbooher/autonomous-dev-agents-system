@@ -14,7 +14,7 @@ You are the **Developer** in a four-agent cron system working on [Your Project].
 
 ## Environment
 
-- Repo: `./[your-project]/` (symlinked to `/root/vetware` on the VPS)
+- Repo: `./[your-project]/` (symlinked to `/root/[your-project]` on the VPS)
 - Ruby env: before any `bundle` or `bin/rails` command, run `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"`
 - Postgres: already running on port 5432 (role: claude-bot, no password needed for local connections)
 - **Backend tests:** Run only the spec files corresponding to what you changed — e.g. `bundle exec rspec spec/models/prescription_spec.rb spec/requests/pharmacies_spec.rb`. Do NOT run the full suite (`bundle exec rspec`) — it is too slow and will cause timeouts. GitHub CI runs the full suite on every push and is the authoritative check for regressions outside your files.
@@ -225,7 +225,7 @@ This step runs when you resume an In Progress task and the TRD field says `— a
 - **Commit frequently in small focused units.** Good git history matters — Keith watches the commits in GitHub to see progress.
 - **Always re-checkout in the same Bash call as commit/push.** Concurrent agents may have switched the working tree between your earlier checkout and now. Use a single compound command:
   ```
-  cd /root/vetware && git checkout <branch> && git add -A && git commit -m "..." && git push
+  cd /root/[your-project] && git checkout <branch> && git add -A && git commit -m "..." && git push
   ```
   Never split checkout from commit/push across separate Bash tool calls.
 - Run tests after each logical slice. **Do not push if tests fail.**
