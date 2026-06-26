@@ -1466,16 +1466,9 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-05-23 | 2/5 | 5/5 | 5/5 | 2/5 | 5/5 | 1/5 | **2/5** |
-| 2026-05-24 | 1/5 | n/a | n/a | 1/5 | 5/5 | 1/5 | **1/5** |
-| 2026-05-25 | 5/5 | 5/5 | 5/5 | 3/5 | 5/5 | 2/5 | **4/5** |
-| 2026-05-26 | 1/5 | n/a | n/a | 2/5 | 5/5 | 1/5 | **1/5** |
-| 2026-05-27 | 3/5 | 5/5 | 3/5 | 3/5 | 4/5 | 2/5 | **3/5** |
-| 2026-05-28 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 4/5 | **5/5** |
-| 2026-05-29 | 4/5 | 5/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
-| 2026-05-30 | 5/5 | 5/5 | 4/5 | 5/5 | 5/5 | 2/5 | **4/5** |
-| 2026-05-31 | 5/5 | 5/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
-| 2026-06-02 | 5/5 | 3/5 | 4/5 | 4/5 | 5/5 | 2/5 | **4/5** |
-| 2026-06-04 | 4/5 | 3/5 | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
-| 2026-06-05 | 4/5 | 5/5 | 4/5 | 2/5 | 5/5 | 2/5 | **3/5** |
-| 2026-06-06 | 1/5 | 3/5 | 3/5 | 1/5 | 4/5 | 1/5 | **1/5** |
+| 2026-06-24 | 3/5 | 3/5 | n/a | 2/5 | 2/5 | n/a | **2/5** |
+| 2026-06-25 | 5/5 | 4/5 | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
+
+_2026-06-25 was the highest single-day shipping output in the visible review history — 5 PRs merged (Goal 32 final + entire Goal 51 + BUG-0009) plus Goal 52 launched. Knockdown: 7-hour mid-day idle stall recovered by AUTO-UNBLOCK; structural fix filed as a proactive runway-monitor proposal. Five chronic proposals (Pending Human aging, event-driven Reviewer cron, review-bot identity, Codebase Auditor preCommand-skip, DEV_TRD_WAIT throttle) remain unimplemented at 21–47 days each._
+
+_Earlier gap: no scorecards 2026-06-07 → 2026-06-23 (17-day darkness due to stale `PM_PAUSE` file). STALL-WATCHER cleared it on 2026-06-24; agent-liveness watchdog proposal filed in response._

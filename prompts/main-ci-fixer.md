@@ -16,7 +16,7 @@ git checkout main && git pull origin main
 
 ## Step 1 — Read the trigger
 
-Read `/tmp/vetware-main-ci-failed-claimed`. It contains: `<github_run_id> <sha>`
+Read `/tmp/[your-project]-main-ci-failed-claimed`. It contains: `<github_run_id> <sha>`
 
 Extract the run ID and SHA. Then fetch the failed test output:
 
@@ -181,7 +181,7 @@ PRBODY
 Post to the failures channel:
 ```bash
 PR_URL=$(gh pr view fix/main-ci-$SHA_SHORT --json url -q '.url')
-node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
+node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js 1494841582413938940 "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 SHA: $SHA_SHORT
 Failure: <one-line description>
 Fix type: <A/B/C>
@@ -199,10 +199,10 @@ PR_URL=$(gh pr view fix/main-ci-$SHA_SHORT --json url -q '.url' 2>/dev/null || e
 ## Step 7 — Cleanup
 
 ```bash
-# Do NOT delete /tmp/vetware-main-ci-failed-claimed — the cron dedup logic relies on it existing
-# with the same content as /tmp/vetware-main-ci-failed to block re-triggering this agent.
+# Do NOT delete /tmp/[your-project]-main-ci-failed-claimed — the cron dedup logic relies on it existing
+# with the same content as /tmp/[your-project]-main-ci-failed to block re-triggering this agent.
 # If you delete it, the cron will keep re-firing every cycle for the same stale run.
-rm -f /tmp/vetware-main-ci-failed-log.txt
+rm -f /tmp/[your-project]-main-ci-failed-log.txt
 git checkout main
 ```
 

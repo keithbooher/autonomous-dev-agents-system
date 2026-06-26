@@ -13,7 +13,7 @@ git fetch origin
 
 ## Step 1 — Read the trigger
 
-Read `/tmp/vetware-pr-ci-failed-claimed`. It contains: `<pr_number> <branch_name>`
+Read `/tmp/[your-project]-pr-ci-failed-claimed`. It contains: `<pr_number> <branch_name>`
 
 ## Step 2 — Fetch the failed CI output
 
@@ -135,7 +135,7 @@ TS=$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 ## Step 7 — Cleanup
 
 ```bash
-rm -f /tmp/vetware-pr-ci-failed-claimed /tmp/vetware-pr-ci-fixer.lock
+rm -f /tmp/[your-project]-pr-ci-failed-claimed /tmp/[your-project]-pr-ci-fixer.lock
 git checkout main
 ```
 

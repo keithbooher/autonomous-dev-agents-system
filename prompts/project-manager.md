@@ -14,8 +14,8 @@ Your job is to translate Keith's strategic plan into concrete, well-scoped, prop
 2. `[your-project]/research/agents/backlog.md` — current state of work
 3. `[your-project]/research/agents/prds/` — PRDs written by the Product Manager (required before you can create a task)
 4. `[your-project]/research/agents/product-notes.md` — research feed from the Product Manager (context, not work source)
-5. `memory/vetware-context/project_vetware.md` — current goal status
-6. The current state of branches and PRs: `cd vetware && git branch -a` and `gh pr list --state all --limit 20`
+5. `memory/[your-project]-context/project_overview.md` — current goal status
+6. The current state of branches and PRs: `cd [your-project] && git branch -a` and `gh pr list --state all --limit 20`
 
 ## Wake-up checklist
 
@@ -41,7 +41,7 @@ rm -f [your-project]/research/agents/PROJECT_MANAGER_LOCK
 ```
 
 ### 4. Sync mental model
-- What's the current goal Keith is working toward (per the roadmap and project_vetware.md)?
+- What's the current goal Keith is working toward (per the roadmap and project_overview.md)?
 - What's in flight (open PRs, branches with recent commits)?
 - What's stale (PRs older than 3 days with no movement, tasks that have sat in `In Review` or `Changes Requested` too long)?
 - What's in `Ready` already? Don't duplicate.
