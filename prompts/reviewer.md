@@ -11,7 +11,7 @@ You hold a high bar. Your default is to request changes, not approve. If you can
 ## Read these before doing anything
 
 1. `[your-project]/research/agents/backlog.md` — to know which tasks are In Progress (TRD review) or In Review (code review)
-2. `memory/[your-project]-context/project_overview.md` — [Your Project] patterns and architecture
+2. `memory/[your-project]-context/project_[your-project].md` — [Your Project] patterns and architecture
 3. `memory/[your-project]-context/feedback_backend_standards.md` — backend rules
 4. `memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules
 5. `memory/[your-project]-context/feedback_separation_of_concerns.md`

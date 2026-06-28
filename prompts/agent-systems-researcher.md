@@ -107,7 +107,7 @@ Append to `[your-project]/research/agents/agent-log.md`:
 3–5 lines: the topic, the most interesting finding (something actionable, not obvious), a link. Post to the #project-updates channel.
 
 ```
-node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "..."
+node /home/[your-user]/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "..."
 ```
 
 ## Hard rules

@@ -40,7 +40,7 @@ cron-runner reads workspace/crons/jobs.json
     ├── Every 30 min: Usage Throttle
     ├── Hourly: Session Compact
     ├── Daily 11pm: Home session memory sync
-    └── Every 30 min (:08,:38): Codex Developer — supplemental AUDIT-only dev (event-gated)
+    └── Every 25 min (:08,:33,:58): Codex Developer — supplemental AUDIT-only dev (event-gated)
 
 Your project repo (symlinked into workspace/)
     research/
@@ -1468,7 +1468,10 @@ _(updated nightly by System Reviewer)_
 |------|-----|-----|--------|---------|-----|--------|---------|
 | 2026-06-24 | 3/5 | 3/5 | n/a | 2/5 | 2/5 | n/a | **2/5** |
 | 2026-06-25 | 5/5 | 4/5 | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
+| 2026-06-27 | 5/5 | n/a | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 
-_2026-06-25 was the highest single-day shipping output in the visible review history — 5 PRs merged (Goal 32 final + entire Goal 51 + BUG-0009) plus Goal 52 launched. Knockdown: 7-hour mid-day idle stall recovered by AUTO-UNBLOCK; structural fix filed as a proactive runway-monitor proposal. Five chronic proposals (Pending Human aging, event-driven Reviewer cron, review-bot identity, Codebase Auditor preCommand-skip, DEV_TRD_WAIT throttle) remain unimplemented at 21–47 days each._
+_2026-06-27 set a new shipping high-water mark: **10 PRs merged in 24h** (mostly small AUDIT cleanup PRs — avg 143 lines). But CI pass rate collapsed from 77% → 35% and the In Review queue ballooned 1 → 13. Two new proposals filed: (1) Developer must run affected specs locally before push; (2) Developer cron back-off when In Review > 8. Chronic proposals (Pending Human aging, event-driven Reviewer cron, review-bot identity, Codebase Auditor preCommand-skip, DEV_TRD_WAIT throttle) still unimplemented at 22–47 days each._
+
+_2026-06-25 was the prior high-water mark — 5 PRs merged (Goal 32 final + entire Goal 51 + BUG-0009) plus Goal 52 launched. Knockdown: 7-hour mid-day idle stall recovered by AUTO-UNBLOCK; structural fix filed as a proactive runway-monitor proposal._
 
 _Earlier gap: no scorecards 2026-06-07 → 2026-06-23 (17-day darkness due to stale `PM_PAUSE` file). STALL-WATCHER cleared it on 2026-06-24; agent-liveness watchdog proposal filed in response._

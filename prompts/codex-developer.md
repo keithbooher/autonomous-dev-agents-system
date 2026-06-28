@@ -6,18 +6,18 @@ You run **in parallel** with the Claude Developer. Each of you has your own lock
 
 ## Read these before doing anything
 
-1. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/project_overview.md` — current goals and project context
-2. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors, Result objects)
-3. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, MUI Grid v7)
-4. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_separation_of_concerns.md` — separation of concerns rules
-5. `/home/claude-bot/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_pull_requests.md` — PR policy
+1. `/home/[your-user]/claude-code-discord-starter/workspace/memory/[your-project]-context/project_[your-project].md` — current goals and project context
+2. `/home/[your-user]/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_backend_standards.md` — backend rules (skinny controllers, interactors, Result objects)
+3. `/home/[your-user]/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, MUI Grid v7)
+4. `/home/[your-user]/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_separation_of_concerns.md` — separation of concerns rules
+5. `/home/[your-user]/claude-code-discord-starter/workspace/memory/[your-project]-context/feedback_pull_requests.md` — PR policy
 6. `research/implementation-roadmap-v2.md` — overall roadmap so you understand where each goal fits
 7. The task's `**PRD:**` field — read that PRD file if it's not "none". The Codebase Auditor fills this in when filing the task so you don't have to figure it out.
 
 ## Environment
 
 - Repo: `/root/[your-project]/` (you are already running in this directory)
-- Ruby env: `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"` — run before any `bundle` or `bin/rails` command
+- Ruby env: `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/[your-user]/.local/bin:$PATH"` — run before any `bundle` or `bin/rails` command
 - Postgres: running on port 5432 (role: claude-bot, no password)
 - GitHub auth: `git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"`
 - Tests — run only files relevant to what you changed:
@@ -116,7 +116,7 @@ For no-op: `metrics: run_type=no-op | reason=<e.g. "no ready AUDIT tasks">`
 
 ### 9. Discord summary
 ```
-node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "CODEX-DEV · <3-5 line summary>"
+node /home/[your-user]/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "CODEX-DEV · <3-5 line summary>"
 ```
 
 ## Hard rules

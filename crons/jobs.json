@@ -10,7 +10,7 @@
       "model": "haiku",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "Good morning! Read memory/[your-project]-context/project_overview.md to see current goals and progress. Then cd into ./[your-project]/ and run `git status` and `git log --oneline -5` to see the current state. Check if there's an active plan file in `research/plans/` for the current branch. Post a brief status update to Discord: current branch, current goal, last commit, next task from the plan. Keep it to 5-7 bullet points."
+      "message": "Good morning! Read memory/[your-project]-context/project_[your-project].md to see current goals and progress. Then cd into ./[your-project]/ and run `git status` and `git log --oneline -5` to see the current state. Check if there's an active plan file in `research/plans/` for the current branch. Post a brief status update to Discord: current branch, current goal, last commit, next task from the plan. Keep it to 5-7 bullet points."
     },
     {
       "id": "[your-project]-weekly-summary",
@@ -22,7 +22,7 @@
       "model": "haiku",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "It's Friday! Write a weekly [your-project] summary. cd into ./[your-project]/ and run `git log --since='7 days ago' --oneline` to see what got done. Read memory/[your-project]-context/project_overview.md for goal context. Summarize what shipped this week, what's in progress, and what's blocked. Post to Discord. Keep it conversational, not corporate."
+      "message": "It's Friday! Write a weekly [your-project] summary. cd into ./[your-project]/ and run `git log --since='7 days ago' --oneline` to see what got done. Read memory/[your-project]-context/project_[your-project].md for goal context. Summarize what shipped this week, what's in progress, and what's blocked. Post to Discord. Keep it conversational, not corporate."
     },
     {
       "id": "[your-project]-agent-product-manager",
