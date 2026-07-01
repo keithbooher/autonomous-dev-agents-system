@@ -1469,8 +1469,14 @@ _(updated nightly by System Reviewer)_
 | 2026-06-24 | 3/5 | 3/5 | n/a | 2/5 | 2/5 | n/a | **2/5** |
 | 2026-06-25 | 5/5 | 4/5 | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-06-27 | 5/5 | n/a | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
+| 2026-06-29 | 1/5 | n/a | 3/5 | 1/5 | 5/5 | 1/5 | **2/5** |
+| 2026-06-30 | 1/5 | n/a | 1/5 | 1/5 | 5/5 | 1/5 | **1/5** |
 
-_2026-06-27 set a new shipping high-water mark: **10 PRs merged in 24h** (mostly small AUDIT cleanup PRs — avg 143 lines). But CI pass rate collapsed from 77% → 35% and the In Review queue ballooned 1 → 13. Two new proposals filed: (1) Developer must run affected specs locally before push; (2) Developer cron back-off when In Review > 8. Chronic proposals (Pending Human aging, event-driven Reviewer cron, review-bot identity, Codebase Auditor preCommand-skip, DEV_TRD_WAIT throttle) still unimplemented at 22–47 days each._
+_2026-06-30: **Pipeline dead 48h in a row.** 0 Developer runs, 0 Reviewer runs, 1 PR merged (Keith-driven). Root cause unchanged from 06-29: half-complete `backlog.md → kanban-board.md` migration means every cron preCommand awks a non-existent file. Reviewer is now silently exiting (~57 fires/day, 0 log entries) — PR #841 has been review-ready with green CI for 8+ hours untouched. Codebase Auditor has now filed 18 tasks into a black hole across the 48h. Emergency escalation proposal filed._
+
+_2026-06-29: First 1/5 Overall in visible history. Structural break: `backlog.md` file replaced by `kanban-board.md` with incompatible format; 18 crons + 15 prompts still read the missing file. Developer 0% productive despite 17 tasks queued. Auditor still filing tasks; Auditor + PR-CI-Fixer + one manual PM restore were the only value-adds. Three new proposals filed: migration fix (critical), Mac watcher one-way sync, migration timestamp uniqueness._
+
+_2026-06-27 set the shipping high-water mark: **10 PRs merged in 24h** (mostly small AUDIT cleanup PRs — avg 143 lines). But CI pass rate collapsed from 77% → 35% and the In Review queue ballooned 1 → 13. Two new proposals filed: (1) Developer must run affected specs locally before push; (2) Developer cron back-off when In Review > 8. Chronic proposals (Pending Human aging, event-driven Reviewer cron, review-bot identity, Codebase Auditor preCommand-skip, DEV_TRD_WAIT throttle) still unimplemented at 22–47 days each._
 
 _2026-06-25 was the prior high-water mark — 5 PRs merged (Goal 32 final + entire Goal 51 + BUG-0009) plus Goal 52 launched. Knockdown: 7-hour mid-day idle stall recovered by AUTO-UNBLOCK; structural fix filed as a proactive runway-monitor proposal._
 
