@@ -185,7 +185,7 @@ The date format string **must** include `%H:%M` so the time field appears. Do no
 
 Post to `#coding-updates` (channel `YOUR_CHANNEL_ID`):
 ```
-node /home/[your-user]/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "your message"
+node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "your message"
 ```
 
 3–5 lines: area audited, how many issues found, what the top issues were, what's next.

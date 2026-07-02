@@ -190,22 +190,22 @@ Common things that drift:
 - Operational files list (new files/directories)
 - Key design decisions (new patterns added to the workflow)
 
-**After posting to Discord**, sync the public repo so friends can see the latest system design. The public repo clone lives at `/home/[your-user]/autonomous-dev-agents-system/`.
+**After posting to Discord**, sync the public repo so friends can see the latest system design. The public repo clone lives at `/home/claude-bot/autonomous-dev-agents-system/`.
 
 Steps:
 1. Copy all prompt files to the public repo, replacing [Your Project]-specific names/paths with `[your-project]` placeholders:
    ```bash
-   cp [your-project]/research/agents/prompts/*.md /home/[your-user]/autonomous-dev-agents-system/prompts/
+   cp [your-project]/research/agents/prompts/*.md /home/claude-bot/autonomous-dev-agents-system/prompts/
    ```
-   Then open each file in `/home/[your-user]/autonomous-dev-agents-system/prompts/` and replace: `[your-project]/` → `[your-project]/`, `[Your Project]` → `[Your Project]`, channel IDs → `YOUR_CHANNEL_ID`, `[your-github-username]` → `[your-github-username]`.
+   Then open each file in `/home/claude-bot/autonomous-dev-agents-system/prompts/` and replace: `[your-project]/` → `[your-project]/`, `[Your Project]` → `[Your Project]`, channel IDs → `YOUR_CHANNEL_ID`, `[your-github-username]` → `[your-github-username]`.
 
-2. Copy `workspace/crons/jobs.json` to `/home/[your-user]/autonomous-dev-agents-system/crons/jobs.json`, replacing all channel IDs with `YOUR_CHANNEL_ID` and all project-specific message content with generic placeholders.
+2. Copy `workspace/crons/jobs.json` to `/home/claude-bot/autonomous-dev-agents-system/crons/jobs.json`, replacing all channel IDs with `YOUR_CHANNEL_ID` and all project-specific message content with generic placeholders.
 
-3. Copy `autonomous-dev-system-guide.md` (at the root of the claude-code-discord-starter project) to `/home/[your-user]/autonomous-dev-agents-system/GUIDE.md`.
+3. Copy `autonomous-dev-system-guide.md` (at the root of the claude-code-discord-starter project) to `/home/claude-bot/autonomous-dev-agents-system/GUIDE.md`.
 
 4. Commit and push — only if something changed:
    ```bash
-   cd /home/[your-user]/autonomous-dev-agents-system
+   cd /home/claude-bot/autonomous-dev-agents-system
    git add -A
    git diff --cached --quiet || git commit -m "sync: system updates from nightly review $(TZ=America/New_York date '+%Y-%m-%d')" && git push
    ```

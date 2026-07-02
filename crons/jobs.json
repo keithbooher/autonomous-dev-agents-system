@@ -53,7 +53,7 @@
     {
       "id": "[your-project]-agent-project-manager",
       "name": "[Your Project] Agent — Project Manager (every 45 min)",
-      "schedule": "3,33 * * * *",
+      "schedule": "7,57 * * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 600,
@@ -67,7 +67,7 @@
     {
       "id": "[your-project]-agent-reviewer",
       "name": "[Your Project] Agent — Reviewer (every 30 min fallback)",
-      "schedule": "4,9,14,19,24,29,34,39,44,49,54,59 * * * *",
+      "schedule": "4,29,54 * * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 1800,
@@ -137,7 +137,7 @@
     {
       "id": "[your-project]-agent-codex-developer",
       "name": "[Your Project] Agent — Codex Developer (every 30 min, AUDIT tasks)",
-      "schedule": "8,33,58 * * * *",
+      "schedule": "8,38 * * * *",
       "tz": "America/New_York",
       "enabled": false,
       "runner": "codex",
@@ -152,7 +152,7 @@
     {
       "id": "[your-project]-agent-developer",
       "name": "[Your Project] Agent — Developer (every 15 min)",
-      "schedule": "1,6,11,16,21,26,31,36,41,46,51,56 * * * *",
+      "schedule": "1,26,51 * * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 2400,

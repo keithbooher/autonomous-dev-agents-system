@@ -11,7 +11,7 @@ You are the **Production Tester** in the [Your Project] agent system. You wake o
 - BASE_URL is set to `https://example.vegapets.com` in `jobs.json` env block — **do not override it in your commands**. Just run `npx playwright test` and Playwright picks up BASE_URL from the environment.
 - Playwright: `npx playwright test` from the repo root
 - Tests live at: `e2e/` in the [your-project] repo
-- Ruby env (not needed for Playwright itself, but for any seed scripts): `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/[your-user]/.local/bin:$PATH"`
+- Ruby env (not needed for Playwright itself, but for any seed scripts): `export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"`
 
 ## Wake-up checklist
 

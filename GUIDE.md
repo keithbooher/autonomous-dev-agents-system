@@ -19,11 +19,11 @@ claude-code-discord-starter (the harness)
 
 cron-runner reads workspace/crons/jobs.json
     │
-    ├── Every 5 min (:01,:06,:11,…,:56): Developer agent ────────────────────┐
-    ├── Every 5 min fallback (:04,:09,…,:59): Reviewer agent                 │
+    ├── Every 25 min (:01,:26,:51): Developer agent ─────────────────────────┐
+    ├── Every 25 min fallback (:04,:29,:54): Reviewer agent                  │
     ├── 2×/hr fallback (:05,:35): TRD Watcher                                │
     ├── Every 15 min fallback: Merge Watcher                                 │
-    ├── 2×/hr (:03,:33): Project Manager                                     │
+    ├── 2×/hr (:07,:57): Project Manager                                     │
     ├── 2×/hr (:07,:57): Product Manager (signal-gated)                      │
     ├── Daily 7am: Industry Researcher                                       │
     ├── Daily 10am: Proposals Manager                                        │
@@ -40,7 +40,7 @@ cron-runner reads workspace/crons/jobs.json
     ├── Every 30 min: Usage Throttle
     ├── Hourly: Session Compact
     ├── Daily 11pm: Home session memory sync
-    └── Every 25 min (:08,:33,:58): Codex Developer — supplemental AUDIT-only dev (event-gated)
+    └── Every 30 min (:08,:38): Codex Developer — supplemental AUDIT-only dev (event-gated)
 
 Your project repo (symlinked into workspace/)
     research/
@@ -1471,6 +1471,9 @@ _(updated nightly by System Reviewer)_
 | 2026-06-27 | 5/5 | n/a | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-06-29 | 1/5 | n/a | 3/5 | 1/5 | 5/5 | 1/5 | **2/5** |
 | 2026-06-30 | 1/5 | n/a | 1/5 | 1/5 | 5/5 | 1/5 | **1/5** |
+| 2026-07-01 | 5/5 | n/a | 4/5 | 5/5 | 5/5 | 3/5 | **5/5** |
+
+_2026-07-01: **Full recovery — highest-volume day on record.** 17 PRs merged (previous high was 10 on 06-27). Silent restore of `research/agents/backlog.md` happened between 06-30 21:20 ET and 07-01 00:02 ET (path taken: Option A — restore backlog.md as authoritative, no cron rewrites). Productive rate jumped from 14% → 37%. Two new proposals filed: (1) retroactively document the restore in agent-log.md, (2) URGENT — implement the 2026-06-25 runway-monitor proposal within 48h, because Codebase Auditor announced audit-state.md exhaustion at 18:01 ET and the Ready queue depletes in ~1.5 days at current consumption. Chronic proposals from 05-09/05-18/05-19/05-20/06-04/06-25/06-27 all still open._
 
 _2026-06-30: **Pipeline dead 48h in a row.** 0 Developer runs, 0 Reviewer runs, 1 PR merged (Keith-driven). Root cause unchanged from 06-29: half-complete `backlog.md → kanban-board.md` migration means every cron preCommand awks a non-existent file. Reviewer is now silently exiting (~57 fires/day, 0 log entries) — PR #841 has been review-ready with green CI for 8+ hours untouched. Codebase Auditor has now filed 18 tasks into a black hole across the 48h. Emergency escalation proposal filed._
 
