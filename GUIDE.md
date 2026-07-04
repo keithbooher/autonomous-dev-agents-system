@@ -1109,7 +1109,7 @@ Recall memories when context from past conversations would help:
 
 When to write: facts about Keith's life, work, preferences, people he mentions, decisions he makes.
 When to recall: at the start of a new topic, when Keith mentions a person or place.
-Don't write: ephemeral task details, project technical state (that belongs in vetware-context/).
+Don't write: ephemeral task details, project technical state (that belongs in [your-project]-context/).
 ```
 
 ---
@@ -1466,13 +1466,15 @@ _(updated nightly by System Reviewer)_
 
 | Date | Dev | TRD | Review | Backlog | PRD | Tokens | Overall |
 |------|-----|-----|--------|---------|-----|--------|---------|
-| 2026-06-24 | 3/5 | 3/5 | n/a | 2/5 | 2/5 | n/a | **2/5** |
 | 2026-06-25 | 5/5 | 4/5 | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-06-27 | 5/5 | n/a | 4/5 | 3/5 | 5/5 | 2/5 | **4/5** |
 | 2026-06-29 | 1/5 | n/a | 3/5 | 1/5 | 5/5 | 1/5 | **2/5** |
 | 2026-06-30 | 1/5 | n/a | 1/5 | 1/5 | 5/5 | 1/5 | **1/5** |
 | 2026-07-01 | 5/5 | n/a | 4/5 | 5/5 | 5/5 | 3/5 | **5/5** |
 | 2026-07-02 | 5/5 | 5/5 | 4/5 | 3/5 | 5/5 | 3/5 | **4/5** |
+| 2026-07-03 | 4/5 | 5/5 | 5/5 | 2/5 | 5/5 | 2/5 | **4/5** |
+
+_2026-07-03: **Goal 55 (Multi-Owner Households) shipped end-to-end in a single 24h window — all 8 parts merged, plus Goal 53 Parts 1–2, Goal 31, and AUDIT-0569 (13 PRs total).** TRD Watcher batting 12/12 first-pass approvals; Reviewer approval rate 82% round-1 with clean batching; main branch 100% CI-green all day. But the pipeline stalled at 16:32 ET after PR #900 merged — Ready went to 0 and stayed 0 for 4.5h+ because all 4 forward goals (54, 56, 57, 58) are blocked on Keith input and no Discord alert fired despite PM correctly diagnosing the condition at 16:40 ET. Two new proposals filed: (1) runway-monitor alert must reach Discord (Step 5a in PM prompt fires internally but doesn't post to Discord); (2) Daily "Keith Decisions Required" digest at 08:00 ET to surface open blockers as one consolidated message. Chronic proposals (Reviewer preCommand-ci-pending 47 days, Codebase Auditor preCommand-skip 45 days) still open._
 
 _2026-07-02: **New highest-volume day on record — 29 PRs merged (up from 17 on 07-01).** Median cycle time 3.4h, 17 of 29 PRs merged <4h after opening. Pipeline running at design ceiling on the throughput axis. But Ready queue drained from 26 → 3 during the day and Codebase Auditor is still exhausted — the exact scenario the 06-25 runway-monitor proposal was designed for, escalated URGENT on 07-01 and still unimplemented. Two new proposals filed: (1) Merge Watcher CI-thrash on long-running goals/* branches (10 CI runs on goals/31-charge-auto-posting in 24h, 9 cancelled — TASK-0441 PR #888 blocked 5+ hours); (2) Developer schema.rb regen guard — same two check_constraints have been dropped on 5 separate AUDIT PRs in 10 days. Third proposal is a CRITICAL escalation of runway-monitor with a 30-minute "extend PM prompt" shipping alternative. Chronic proposals from 05-09/05-18/05-19/05-20/06-04/06-25/06-27 all still open at day+1._
 
