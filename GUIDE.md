@@ -1109,7 +1109,7 @@ Recall memories when context from past conversations would help:
 
 When to write: facts about Keith's life, work, preferences, people he mentions, decisions he makes.
 When to recall: at the start of a new topic, when Keith mentions a person or place.
-Don't write: ephemeral task details, project technical state (that belongs in [your-project]-context/).
+Don't write: ephemeral task details, project technical state (that belongs in vetware-context/).
 ```
 
 ---
@@ -1473,6 +1473,9 @@ _(updated nightly by System Reviewer)_
 | 2026-07-01 | 5/5 | n/a | 4/5 | 5/5 | 5/5 | 3/5 | **5/5** |
 | 2026-07-02 | 5/5 | 5/5 | 4/5 | 3/5 | 5/5 | 3/5 | **4/5** |
 | 2026-07-03 | 4/5 | 5/5 | 5/5 | 2/5 | 5/5 | 2/5 | **4/5** |
+| 2026-07-04 | 4/5 | 5/5 | 4/5 | 4/5 | 5/5 | 2/5 | **3/5** |
+
+_2026-07-04: **Recovery day — Ready rebuilt from 0 → 7 without human intervention. 10 PRs merged; TRD Watcher 6/6 first-pass approvals (18 consecutive over 48h).** Codebase Auditor's Goal 55 Multi-Owner audit refilled the queue with 4 real security findings (AUDIT-0641/0642/0643/0644). Reviewer made an exemplary stale-branch call on PR #911 (AUDIT-0637) — two-dot diff verification proved a squash-merge would revert PR #908 + PR #913. On the debit side: Reviewer preCommand-ci-pending fired 159 times (93% of Reviewer boots — 33% of the entire day's agent volume — 48 days chronic since 2026-05-18). Merge Watcher CI-thrash pattern from 07-02 has re-emerged verbatim on goals/54-part3-coggins-workflow (PR #915), pinning Developer for 5 hours. Two proposals filed: (1) PR-CI-Fixer must detect MW-cancel-masked real failures (checks last 3 CI runs, not just latest); (2) URGENT escalation of the 48-day Reviewer preCommand-ci-pending fix — now the single most valuable unimplemented item in the system. Token efficiency dropped to ~14% productive — worst rate in weeks._
 
 _2026-07-03: **Goal 55 (Multi-Owner Households) shipped end-to-end in a single 24h window — all 8 parts merged, plus Goal 53 Parts 1–2, Goal 31, and AUDIT-0569 (13 PRs total).** TRD Watcher batting 12/12 first-pass approvals; Reviewer approval rate 82% round-1 with clean batching; main branch 100% CI-green all day. But the pipeline stalled at 16:32 ET after PR #900 merged — Ready went to 0 and stayed 0 for 4.5h+ because all 4 forward goals (54, 56, 57, 58) are blocked on Keith input and no Discord alert fired despite PM correctly diagnosing the condition at 16:40 ET. Two new proposals filed: (1) runway-monitor alert must reach Discord (Step 5a in PM prompt fires internally but doesn't post to Discord); (2) Daily "Keith Decisions Required" digest at 08:00 ET to surface open blockers as one consolidated message. Chronic proposals (Reviewer preCommand-ci-pending 47 days, Codebase Auditor preCommand-skip 45 days) still open._
 
