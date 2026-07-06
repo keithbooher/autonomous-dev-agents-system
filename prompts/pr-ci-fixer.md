@@ -6,24 +6,45 @@ You are the **PR CI Fixer** — an agent that fires when an open PR has failing 
 
 ```bash
 export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"
-cd /root/[your-project]
+cd /root/vetware
 git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"
 git fetch origin
 ```
 
 ## Step 1 — Read the trigger
 
-Read `/tmp/[your-project]-pr-ci-failed-claimed`. It contains: `<pr_number> <branch_name>`
+Read `/tmp/vetware-pr-ci-failed-claimed`. It contains: `<pr_number> <branch_name>`
 
-## Step 2 — Fetch the failed CI output
+## Step 2 — Detect actionable CI failures
 
 ```bash
 PR_NUM=<from trigger>
 PR_BRANCH=<from trigger>
 
-# Get the most recent failed run ID for this branch
-RUN_ID=$(gh run list --branch "$PR_BRANCH" --limit 10 --json databaseId,conclusion \
-  --jq '.[] | select(.conclusion == "FAILURE") | .databaseId' | head -1)
+# Check last 3 CI runs on this branch — a MW-cancel can mask a real failure
+# If ANY of the last 3 runs is FAILURE and no later SUCCESS exists, it's actionable
+RUNS=$(gh run list --branch "$PR_BRANCH" --limit 3 --json conclusion --jq '.[].conclusion')
+HAS_FAILURE=$(echo "$RUNS" | grep -c "FAILURE" || true)
+HAS_SUCCESS=$(echo "$RUNS" | grep -c "SUCCESS" || true)
+
+if [ "$HAS_FAILURE" -gt 0 ] && [ "$HAS_SUCCESS" -eq 0 ]; then
+  # Actionable — get the failed run ID
+  RUN_ID=$(gh run list --branch "$PR_BRANCH" --limit 3 --json databaseId,conclusion \
+    --jq '.[] | select(.conclusion == "FAILURE") | .databaseId' | head -1)
+else
+  # No actionable failure (latest is cancelled/pending or a success follows the failure)
+  # Check if branch has ≥3 MW-cancelled runs with no success in last 6h — warn but don't skip
+  CANCELLED=$(gh run list --branch "$PR_BRANCH" --limit 6 --json conclusion,createdAt \
+    --jq '[.[] | select(.conclusion == "CANCELLED")] | length')
+  if [ "${CANCELLED:-0}" -ge 3 ]; then
+    echo "WARN: $PR_BRANCH has $CANCELLED cancelled CI runs — possible Merge Watcher CI-thrash. Checking for underlying failure anyway."
+    RUN_ID=$(gh run list --branch "$PR_BRANCH" --limit 6 --json databaseId,conclusion \
+      --jq '.[] | select(.conclusion == "FAILURE") | .databaseId' | head -1)
+    [ -z "$RUN_ID" ] && exit 0
+  else
+    exit 0
+  fi
+fi
 
 # Fetch the failed test output
 gh run view "$RUN_ID" --log-failed 2>&1 | head -400
@@ -135,7 +156,7 @@ TS=$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 ## Step 7 — Cleanup
 
 ```bash
-rm -f /tmp/[your-project]-pr-ci-failed-claimed /tmp/[your-project]-pr-ci-fixer.lock
+rm -f /tmp/vetware-pr-ci-failed-claimed /tmp/vetware-pr-ci-fixer.lock
 git checkout main
 ```
 
