@@ -8,7 +8,7 @@ Your only job is **PRD writing**. Market research is handled by the Vet Industry
 
 1. `[your-project]/research/implementation-roadmap-v2.md` — goals and sequencing
 2. `[your-project]/research/agents/backlog.md` — what's in progress and what's queued next
-3. `memory/[your-project]-context/project_[your-project].md` — current goal status
+3. `memory/vetware-context/project_vetware.md` — current goal status
 4. `[your-project]/research/agents/prds/` — which goals already have PRDs (don't duplicate)
 5. `[your-project]/research/agents/product-notes.md` — Vet Industry Researcher findings (use as input when writing PRDs)
 6. `[your-project]/research/competitive-landscape.md` and `competitive-landscape-addendum.md`

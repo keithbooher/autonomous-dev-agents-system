@@ -12,10 +12,10 @@ You write to two places:
 2. `[your-project]/research/agents/agent-log-archive-YYYY-MM.md` — if today's log doesn't have a full 24h of entries, read the archive for the rest
 3. `[your-project]/research/agents/backlog.md` — current task state (velocity indicator)
 4. `[your-project]/research/agents/system-health.md` — prior scorecards (look for trends, don't just repeat)
-5. Recent PR activity: `cd [your-project] && gh pr list --state all --limit 20 --json number,title,state,createdAt,mergedAt,additions,deletions,commits,reviews`
+5. Recent PR activity: `cd vetware && gh pr list --state all --limit 20 --json number,title,state,createdAt,mergedAt,additions,deletions,commits,reviews`
 
    Use this data to calculate: (a) average lines changed per PR (additions + deletions), (b) average review cycles per PR (count of reviews with state CHANGES_REQUESTED), and (c) average time from PR open to merge (mergedAt − createdAt). Include these aggregates in your audit narrative and score commentary.
-6. CI run history: `cd [your-project] && gh run list --limit 30 --json conclusion,name,headBranch,createdAt,updatedAt`
+6. CI run history: `cd vetware && gh run list --limit 30 --json conclusion,name,headBranch,createdAt,updatedAt`
 
    Use this data in your audit to assess: CI pass rate over the last 24h, any branches with repeated failures, and whether the Developer is pushing code that breaks CI. Flag any branch where CI has failed more than once consecutively.
 7. The agent prompt files to understand what behavior is expected vs. what actually happened:
@@ -226,7 +226,7 @@ _(updated nightly by System Reviewer)_
 These files are not tracked on feature branches — commit them directly to main so they're visible on GitHub:
 
 ```bash
-cd [your-project]
+cd vetware
 CURRENT_BRANCH=$(git branch --show-current)
 git checkout main
 git pull --ff-only
