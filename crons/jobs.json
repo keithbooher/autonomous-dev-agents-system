@@ -1,7 +1,7 @@
 {
   "jobs": [
     {
-      "id": "vetware-daily-status",
+      "id": "[your-project]-daily-status",
       "name": "[Your Project] Daily Status",
       "schedule": "0 9 * * 1-5",
       "tz": "America/New_York",
@@ -13,7 +13,7 @@
       "message": "Good morning! Read memory/[your-project]-context/project_vetware.md to see current goals and progress. Then cd into ./[your-project]/ and run `git status` and `git log --oneline -5` to see the current state. Check if there's an active plan file in `research/plans/` for the current branch. Post a brief status update to Discord: current branch, current goal, last commit, next task from the plan. Keep it to 5-7 bullet points."
     },
     {
-      "id": "vetware-weekly-summary",
+      "id": "[your-project]-weekly-summary",
       "name": "[Your Project] Weekly Summary",
       "schedule": "0 18 * * 5",
       "tz": "America/New_York",
@@ -22,10 +22,10 @@
       "model": "haiku",
       "discordChannel": "YOUR_CHANNEL_ID",
       "announceResult": false,
-      "message": "It's Friday! Write a weekly vetware summary. cd into ./[your-project]/ and run `git log --since='7 days ago' --oneline` to see what got done. Read memory/[your-project]-context/project_vetware.md for goal context. Summarize what shipped this week, what's in progress, and what's blocked. Post to Discord. Keep it conversational, not corporate."
+      "message": "It's Friday! Write a weekly [your-project] summary. cd into ./[your-project]/ and run `git log --since='7 days ago' --oneline` to see what got done. Read memory/[your-project]-context/project_vetware.md for goal context. Summarize what shipped this week, what's in progress, and what's blocked. Post to Discord. Keep it conversational, not corporate."
     },
     {
-      "id": "vetware-agent-product-manager",
+      "id": "[your-project]-agent-product-manager",
       "name": "[Your Project] Agent — Product Manager (every 2h, event-gated)",
       "schedule": "7 */2 * * *",
       "tz": "America/New_York",
@@ -39,7 +39,7 @@
       "message": "You are the Product Manager agent in the [Your Project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/product-manager.md and follow them exactly. Your primary job is PRD writing — check the next 2 upcoming goals and write PRDs for any that don't have one in research/agents/prds/. Use product-notes.md from the Vet Industry Researcher as your primary research source, but if it doesn't cover what you need for a solid PRD, do the research yourself. Never touch backlog.md or any code. Log the run and post a Discord summary."
     },
     {
-      "id": "vetware-agent-vet-industry-researcher",
+      "id": "[your-project]-agent-vet-industry-researcher",
       "name": "[Your Project] Agent — Vet Industry Researcher (daily)",
       "schedule": "0 7 * * *",
       "tz": "America/New_York",
@@ -51,9 +51,9 @@
       "message": "You are the Vet Industry Researcher agent in the [Your Project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/vet-industry-researcher.md and follow them exactly. Research one topic in the US veterinary software and PIMS market, append findings to product-notes.md, surface proposals if warranted, log the run, post a Discord summary. You are a domain expert and research feed — never touch backlog.md, never write PRDs, never write code."
     },
     {
-      "id": "vetware-agent-project-manager",
+      "id": "[your-project]-agent-project-manager",
       "name": "[Your Project] Agent — Project Manager (every 45 min)",
-      "schedule": "3,33 * * * *",
+      "schedule": "7,57 * * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 600,
@@ -65,9 +65,9 @@
       "message": "You are the Project Manager agent in the [Your Project] four-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/project-manager.md and follow them exactly. Stay strictly within scope: groom backlog.md against implementation-roadmap-v2.md. Critical rule: never create a task for a goal unless a PRD exists for it in research/agents/prds/ — if no PRD, log the gap and wait. Surface off-plan ideas to proposals.md. Never write code or touch branches. Log the run and post a Discord summary."
     },
     {
-      "id": "vetware-agent-reviewer",
+      "id": "[your-project]-agent-reviewer",
       "name": "[Your Project] Agent — Reviewer (every 30 min fallback)",
-      "schedule": "4,9,14,19,24,29,34,39,44,49,54,59 * * * *",
+      "schedule": "4,29,54 * * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 1800,
@@ -79,7 +79,7 @@
       "message": "You are the Reviewer agent in the [Your Project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/reviewer.md and follow them exactly. You do code reviews only — TRD reviews are handled by the TRD Watcher cron. **REVIEWER_TARGET contains ALL CI-green PRs ready for review (space-separated PR numbers) — review every one of them this run, oldest first.** For each PR: review against standards memories, verify the implementation matches the approved TRD, hold a high bar — justify-or-defer. **All approved PRs (TASK, BUG, AUDIT): squash-merge immediately on approval if CI is green (`gh pr merge <num> --squash --delete-branch`), then move to Shipped. Never leave an approved PR unmerged.** After all PRs, log the full run and post a single Discord summary covering all PRs reviewed. **CI handling:** Do NOT leave comments asking the developer to fix CI failures — the PR CI Fixer cron handles that automatically. If a PR has failing CI mid-review, skip it and move to the next."
     },
     {
-      "id": "vetware-agent-trd-watcher",
+      "id": "[your-project]-agent-trd-watcher",
       "name": "[Your Project] Agent — TRD Watcher (every 30 min fallback)",
       "schedule": "5,35 * * * *",
       "tz": "America/New_York",
@@ -93,7 +93,7 @@
       "message": "You are the TRD Watcher in the [Your Project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/trd-watcher.md and follow them exactly. Check In Progress AND In Review sections of backlog.md for any task with 'TRD: ... awaiting-review'. If none, exit silently. If found, use `gh pr view <num> --json reviews` to check if you already left a TRD review in a prior run — if so, exit silently (do not re-review). Otherwise review the TRD for architectural soundness, scope alignment against the PRD, data model quality, scalability, and test plan completeness. Approve or request changes. One TRD per run."
     },
     {
-      "id": "vetware-agent-merge-watcher",
+      "id": "[your-project]-agent-merge-watcher",
       "name": "[Your Project] Agent — Merge Watcher (every 15 min fallback)",
       "schedule": "*/15 * * * *",
       "tz": "America/New_York",
@@ -107,7 +107,7 @@
       "message": "You are the Merge Watcher — a lightweight helper in the [Your Project] agent system. Your jobs: (1) update backlog state when main gets new merges, (2) merge main into all open PR branches to keep them up to date. Run fast and exit.\n\n**IMPORTANT: backlog.md, agent-log.md, proposals.md, velocity.md are gitignored local-only files. Edit them directly — never `git add` them. Your git commits are exclusively for merging main into feature branches (app code, db/schema.rb, research docs). Backlog state changes never appear in any commit.**\n\n**Hard rule — move-task.py failures:** If any `move-task.py` call exits non-zero, capture the error output and post to #failures-and-errors immediately: `node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js 1494841582413938940 \"⚠️ move-task failed [MERGE-WATCHER] TASK-NNNN: <error output>\"` — then halt the run. Do not continue.\n\n0. PAUSE check: if `./[your-project]/research/agents/PAUSE` or `./[your-project]/research/agents/MW_PAUSE` exists, exit silently. (preCommand already checked this — this is a safety net.)\n0b. LOCK: Check `./[your-project]/research/agents/MERGE_WATCHER_LOCK`. If it exists and is less than 7 minutes old, exit silently. If 7+ minutes old, delete it. Claim: `echo \"$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')\" > ./[your-project]/research/agents/MERGE_WATCHER_LOCK`. Release (`rm -f ./[your-project]/research/agents/MERGE_WATCHER_LOCK`) before every exit path.\n0c. MID-MERGE RECOVERY: Check if the repo is stuck in a mid-merge state: `cd /Users/[your-github-username]/[your-project] && git status --short | grep '^UU\\|^AA\\|^DD'`. If any unmerged paths exist, the previous run timed out. Pick up immediately:\n   - Check what files still need resolving: `git diff --name-only --diff-filter=U`\n   - If none remain: `git add app/ spec/ src/ db/ research/plans/ research/goals/ research/implementation-roadmap-v2.md && git commit --no-edit && git push && touch /root/[your-project]/research/agents/REVIEWER_READY`. Then check backlog.md — if the branch's task is in Approved, move it to In Review locally: append `⚠️ Moved back to In Review after conflict-resolution merge from main on YYYY-MM-DD — Reviewer must re-verify` to its Notes.\n   - If conflicts remain: resolve them using Step B logic below, then commit and push.\n   - After recovery, proceed normally.\n0d. RECONCILIATION: Run `cd ./[your-project] && gh pr list --state merged --json number,headRefName,mergedAt --limit 20`. For each merged PR, check if a task in `research/agents/backlog.md` has a matching `PR:` field and is NOT already in Shipped. If found, move it to Shipped using `python3 /root/[your-project]/research/agents/move-task.py /root/[your-project]/research/agents/backlog.md TASK-NNNN Shipped` and then edit the task block to append to Notes: `Shipped via reconciliation — PR #N merged YYYY-MM-DD`. (Local edit only — no git commit.)\n1. Check for merges: Read `./[your-project]/research/agents/MW_DETECTED_MERGES` (written by preCommand when new main merges were detected). If the file does not exist, the preCommand found no merges — you were spawned for mid-merge recovery. Skip to step 3 after completing 0c. If the file EXISTS, proceed to step 2. (Note: idle counter and auto-pause are handled by preCommand — do NOT manage them here.)\n2. If merges found — update backlog.md locally (no commit): check the Blocked section for tasks whose blocked reason cites a goal/task that just shipped — move them to Ready using `python3 /root/[your-project]/research/agents/move-task.py /root/[your-project]/research/agents/backlog.md TASK-NNNN Ready`. For each merged PR number, find the matching task in backlog.md and move it to Shipped using `python3 /root/[your-project]/research/agents/move-task.py /root/[your-project]/research/agents/backlog.md TASK-NNNN Shipped`. Then edit the task block to append to its Notes: `Merged to main YYYY-MM-DD (PR #N)`. Append a row to velocity.md (create with header if needed): `| YYYY-MM-DD | TASK-NNNN | Goal N | PR #N | <branch> | <merge commit title> |` — header: `# Velocity Log\\n| Date | Task | Goal | PR | Branch | What shipped |\\n|------|------|------|----|--------|--------------|`.\n3. ALWAYS sync open branches (regardless of whether new merges were found): get all open PR branch names: `gh pr list --state open --json headRefName,number --jq '.[] | \"\\(.number) \\(.headRefName)\"'`. For each branch, check if it is behind main: `git log origin/main --not origin/<branch> --oneline | head -1`. If already up to date, skip it. Otherwise:\n\n   **For `audit/AUDIT-*` branches** — do a conflict dry-run BEFORE merging. These branches have CI already green; merging main when there are no real conflicts just resets their CI unnecessarily.\n   ```\n   git checkout <branch>\n   git merge --no-commit --no-ff origin/main\n   CONFLICTS=$(git diff --name-only --diff-filter=U)\n   ```\n   - If `$CONFLICTS` is empty (clean merge, no conflicts): undo with `git reset --merge` and **skip** this branch entirely. Do NOT push. Log: \"audit branch <name> is behind main but has no conflicts — skipping to preserve CI.\"\n   - If `$CONFLICTS` is non-empty (real conflicts exist): abort the dry-run with `git merge --abort`, then proceed with the full merge+resolve flow below (Step A → B → C).\n\n   **For all other branches** — merge main in whenever behind:\n   ```\n   git checkout <branch>\n   git merge origin/main --no-edit\n   ```\n   - If merge succeeds with no conflicts: `git push` and note it.\n   - If merge has conflicts:\n\n     **Step A — understand both sides:**\n     - Read the branch's plan file and TRD to understand what it's building.\n     - Run `git log origin/main --oneline -3` to see what landed.\n     - Check conflicted files: `git diff --name-only --diff-filter=U`\n     - Note: backlog.md, agent-log.md, proposals.md, velocity.md are gitignored and will NEVER be in the conflict list. Only app code and tracked research docs can conflict.\n\n     **Step B — resolve each conflict using judgment:**\n     - `db/schema.rb`: Take the HIGHER version number. Keep ALL column/table additions from both sides.\n     - `research/implementation-roadmap-v2.md` and other tracked docs: Keep both sides' changes — they are additive descriptions. Merge the content.\n     - App code files (`app/`, `spec/`, `src/`): Keep what main shipped AND what the branch added. If they touch the same method or block, merge the changes so both features work. If you genuinely cannot merge (incompatible architectural choices), abort.\n\n     **Step C — commit and check Approved status:**\n     After resolving: `git add <resolved files>` (never add backlog.md etc.), then check `git diff --name-only --diff-filter=U`.\n     - If no conflicts remain: `git commit --no-edit && git push`. Then signal the Reviewer: `touch /root/[your-project]/research/agents/REVIEWER_READY`. **Then check backlog.md locally**: find the task where `Branch:` matches the current branch. If and ONLY IF that task is in the `Approved` section — move it to `In Review` using `python3 /root/[your-project]/research/agents/move-task.py /root/[your-project]/research/agents/backlog.md TASK-NNNN \"In Review\"` and then edit the task block to append: `⚠️ Moved back to In Review after conflict-resolution merge from main on YYYY-MM-DD — Reviewer must re-verify`. (Local edit, no commit.)\n     - If conflicts remain you cannot safely resolve: `git merge --abort`. Log the failure. Post: `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"merge-watcher: conflict on <branch> — could not auto-resolve <filenames>, needs manual resolution\"`.\n   After all branches: `git checkout -`.\n4. Reset idle counter and wake paused agents: `echo 0 > ./[your-project]/research/agents/MW_IDLE && rm -f ./[your-project]/research/agents/MW_PAUSE ./[your-project]/research/agents/DEV_PAUSE ./[your-project]/research/agents/PM_PAUSE ./[your-project]/research/agents/REV_PAUSE ./[your-project]/research/agents/TRD_PAUSE && echo 0 > ./[your-project]/research/agents/REV_IDLE && echo 0 > ./[your-project]/research/agents/TRD_IDLE && echo 0 > ./[your-project]/research/agents/PM_IDLE && echo 0 > ./[your-project]/research/agents/DEV_IDLE. **Important:** if you just synced branches because new merges landed on main (step 2 ran), it means work shipped — the Project Manager needs to know. Explicitly remove PM_PAUSE and reset PM_IDLE to 0 so it wakes up on the next fire and can restock the Ready queue if needed`. Append to agent-log.md (local): `## YYYY-MM-DD HH:MM ET MERGE-WATCHER\\n- did: unblocked N task(s), synced N branches (N conflicts)\\n- next: <what to watch for next run>`.\n5. If tasks were unblocked, branches synced, or tasks shipped: post one Discord message: `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"**MERGE-WATCHER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')\\nunblocked: N task(s)\\nsynced: N branches\\nconflicts: <branch names or none>\"`\n6. Cleanup: `rm -f ./[your-project]/research/agents/MW_DETECTED_MERGES && rm -f ./[your-project]/research/agents/MERGE_WATCHER_LOCK`. Exit. Do not create tasks or edit task scope."
     },
     {
-      "id": "vetware-main-ci-fixer",
+      "id": "[your-project]-main-ci-fixer",
       "name": "[Your Project] — Main CI Fixer (every 4 min fallback)",
       "schedule": "*/4 * * * *",
       "tz": "America/New_York",
@@ -121,7 +121,7 @@
       "message": "You are the Main CI Fixer agent in the [Your Project] system. Read your full instructions at /root/[your-project]/research/agents/prompts/main-ci-fixer.md and follow them exactly. The trigger file is at /tmp/[your-project]-main-ci-failed-claimed — it contains the GitHub run ID and SHA of the failed main branch CI run. Your job: investigate the failure, trace it back to the original task and PRD, understand the intent, diagnose the failure type (stale test / regression / flaky), fix it with minimum changes, and open a PR. Never push to main directly. Read the PRD before writing any code."
     },
     {
-      "id": "vetware-pr-ci-fixer",
+      "id": "[your-project]-pr-ci-fixer",
       "name": "[Your Project] — PR CI Fixer (every 10 min fallback)",
       "schedule": "*/10 * * * *",
       "tz": "America/New_York",
@@ -135,9 +135,9 @@
       "message": "You are the PR CI Fixer agent in the [Your Project] system. Read your full instructions at /root/[your-project]/research/agents/prompts/pr-ci-fixer.md and follow them exactly. The trigger file is at /tmp/[your-project]-pr-ci-failed-claimed — it contains the PR number and branch name of the open PR with failing CI. Your job: fetch the failed test output, trace the failure back to the task and PRD, understand the original intent, diagnose the failure type (stale test / regression / flaky), fix it with minimum changes, push to the PR branch, and leave a PR comment explaining the fix. Never push to main. Never weaken tests. Read the PRD before writing any code."
     },
     {
-      "id": "vetware-agent-codex-developer",
+      "id": "[your-project]-agent-codex-developer",
       "name": "[Your Project] Agent — Codex Developer (every 30 min, AUDIT tasks)",
-      "schedule": "8,33,58 * * * *",
+      "schedule": "8,38 * * * *",
       "tz": "America/New_York",
       "enabled": false,
       "runner": "codex",
@@ -150,9 +150,9 @@
       "message": "Read /root/[your-project]/research/agents/prompts/codex-developer.md and follow the instructions exactly. You are the Codex Developer — handle AUDIT-XXXX tasks only."
     },
     {
-      "id": "vetware-agent-developer",
+      "id": "[your-project]-agent-developer",
       "name": "[Your Project] Agent — Developer (every 15 min)",
-      "schedule": "1,6,11,16,21,26,31,36,41,46,51,56 * * * *",
+      "schedule": "1,26,51 * * * *",
       "tz": "America/New_York",
       "enabled": true,
       "timeoutSeconds": 2400,
@@ -164,7 +164,7 @@
       "message": "You are the Developer agent in the [Your Project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/developer.md and follow them exactly. Wake-up order is strict: PAUSE check → DEV_LOCK check → fix-up changes-requested (skip any task with Dev: codex) → resume In Progress (skip any task with Dev: codex — that belongs to the Codex Developer running in parallel) → in-flight cap (1 TASK/BUG — AUDIT tasks do not count toward the cap) → top Ready task. On a new Ready task: if it has **Type: audit**, skip PRD gate and TRD entirely — implement the fix directly per the Issue/Fix fields, branch as audit/AUDIT-NNNN-short-description, write tests, open a PR, and add Dev: claude to the task block in backlog.md when moving it to In Progress. For all other tasks: check for PRD field first — if missing or file doesn't exist, move task to Blocked and exit. PRD is required before TRD. Never write feature code until TRD is approved. Always branch from main. Never merge anything. Log the run and post a Discord summary."
     },
     {
-      "id": "vetware-sentry-bug-writer",
+      "id": "[your-project]-sentry-bug-writer",
       "name": "[Your Project] — Sentry Bug Writer (every 6h)",
       "schedule": "0 */6 * * *",
       "tz": "America/New_York",
@@ -178,7 +178,7 @@
       "message": "You are the Sentry Bug Writer in the [Your Project] agent system. Read your full instructions at ./[your-project]/research/agents/prompts/sentry-bug-writer.md and follow them exactly. Query Sentry for new unresolved issues since your last run, filter out noise, and file qualifying errors as BUG-NNNN tasks at the top of the Ready section in [your-project]/research/agents/backlog.md. Post to Discord only if bugs were filed."
     },
     {
-      "id": "vetware-agent-system-reviewer",
+      "id": "[your-project]-agent-system-reviewer",
       "name": "[Your Project] Agent — System Reviewer (daily 9pm)",
       "schedule": "0 21 * * *",
       "tz": "America/New_York",
@@ -190,7 +190,7 @@
       "message": "You are the System Reviewer in the [Your Project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/system-reviewer.md and follow them exactly. Audit the last 24 hours of agent-log.md, score each dimension 1–5 with specific evidence, identify problems with log citations, and file concrete improvement proposals to proposals.md. Be honest — a 3/5 is fine if that's accurate. Append a scorecard to system-health.md and post a summary to Discord."
     },
     {
-      "id": "vetware-agent-log-trim",
+      "id": "[your-project]-agent-log-trim",
       "name": "[Your Project] Agent Log Trim (every 4h)",
       "schedule": "0 */4 * * *",
       "tz": "America/New_York",
@@ -204,7 +204,7 @@
       "message": "This message is never sent — preCommand handles the trim and always exits 1."
     },
     {
-      "id": "vetware-agent-codebase-auditor",
+      "id": "[your-project]-agent-codebase-auditor",
       "name": "[Your Project] Agent — Codebase Auditor (every 6h)",
       "schedule": "0 6,12,18,23 * * *",
       "tz": "America/New_York",
@@ -218,7 +218,7 @@
       "message": "You are the Codebase Auditor agent in the [Your Project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/codebase-auditor.md and follow them exactly. Audit ONE feature area of the codebase this run. Read the actual source files — do not audit from memory. File concrete AUDIT-NNNN tasks for any real issues you find. Update audit-state.md to mark the area done. Log the run and post a Discord summary to #coding-updates."
     },
     {
-      "id": "vetware-stall-watcher",
+      "id": "[your-project]-stall-watcher",
       "name": "[Your Project] — Stall Watcher (every 6 min)",
       "schedule": "3,9,15,21,27,33,39,45,51,57 * * * *",
       "tz": "America/New_York",
@@ -232,7 +232,7 @@
       "message": "You are the Stall Watcher in the [Your Project] agent system. A trigger file has been sitting unprocessed for 60+ minutes — either an agent failed, a touch was missed, or the system genuinely ran out of work.\n\nYour job:\n1. Check which trigger files exist and how old: `ls -la /root/[your-project]/research/agents/{REVIEWER_READY,TRD_READY,DEV_READY,PROJ_MANAGER_READY,PRODUCT_MANAGER_READY} 2>/dev/null`\n2. Read the last 50 lines of agent-log.md: `tail -50 /root/[your-project]/research/agents/agent-log.md`\n3. Check relevant agent lock files to see if anything is currently running\n4. Check backlog.md sections (In Progress, In Review, Ready) to understand the current state\n5. Diagnose: (a) agent failed/errored, (b) agent missed writing a touch on exit, or (c) system is genuinely out of work with no tasks left\n6. Post diagnosis to Discord: `node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"🔍 stall-watcher: <diagnosis and recommended action>\"`\n7. If missed touch: re-touch the stale trigger file to re-signal the target agent\n8. If system is genuinely idle (no tasks in any active state): remove all stale trigger files, log it, and post to Discord confirming the system is idle\n9. Never attempt to run other agents yourself — diagnose, signal, and alert only"
     },
     {
-      "id": "vetware-usage-throttle",
+      "id": "[your-project]-usage-throttle",
       "name": "[Your Project] — Usage Throttle (every 30 min)",
       "schedule": "2,32 * * * *",
       "tz": "America/New_York",
@@ -246,7 +246,7 @@
       "message": "This message is never sent — preCommand always exits 1."
     },
     {
-      "id": "vetware-backlog-archive",
+      "id": "[your-project]-backlog-archive",
       "name": "[Your Project] — Backlog Archive (every 4h)",
       "schedule": "15 */4 * * *",
       "tz": "America/New_York",
@@ -273,7 +273,7 @@
       "preCommand": "tmux send-keys -t claude:0 '/compact' Enter; exit 1"
     },
     {
-      "id": "vetware-production-tester",
+      "id": "[your-project]-production-tester",
       "name": "[Your Project] — Production Tester (daily 06:00 ET)",
       "schedule": "0 6 * * *",
       "tz": "America/New_York",
@@ -290,7 +290,7 @@
       "message": "You are the Production Tester agent in the [Your Project] multi-agent cron system. Read your full instructions at ./[your-project]/research/agents/prompts/production-tester.md and follow them exactly. Run the Playwright E2E suite against staging, post results to Discord, and log the run. Never modify test files or backlog.md."
     },
     {
-      "id": "vetware-agent-systems-researcher",
+      "id": "[your-project]-agent-systems-researcher",
       "name": "[Your Project] Agent — Agent Systems Researcher (weekly Mon 8am)",
       "schedule": "0 8 * * 1",
       "tz": "America/New_York",
@@ -316,7 +316,7 @@
       "message": "Append-only sync of Keith's home Claude Code memories into your notes. IMPORTANT: you must NEVER write to or delete anything under ./memory/[your-project]-context/ or any other memory files except the two paths listed below. Your own memories are sacred — this job only *appends* a narrative log of what changed in Keith's home brain so you stay aware of it.\n\nSource (read-only): /Users/[your-github-username]/.claude/projects/-Users-[your-github-username]/memory/\nAllowed writes:\n  - ./memory/home-session-notes.md (append only, never rewrite history)\n  - ./memory/.home-memory-snapshot/ (hidden working copy — your private diffing workspace; VegaPunk never reads this, only this cron touches it)\n\nSteps:\n1. If ./memory/.home-memory-snapshot/ does not exist, create it and rsync the source into it: `mkdir -p ./memory/.home-memory-snapshot && rsync -a /Users/[your-github-username]/.claude/projects/-Users-[your-github-username]/memory/ ./memory/.home-memory-snapshot/`. Then append a block to home-session-notes.md noting 'initial snapshot — <N> files captured' and stop. No diff on first run.\n2. Otherwise, diff the source against the snapshot: `diff -rq /Users/[your-github-username]/.claude/projects/-Users-[your-github-username]/memory/ ./memory/.home-memory-snapshot/`. For each differing file, read BOTH versions and summarize what meaningfully changed in Keith's thinking — new memories, updated facts, removed content. Skip pure whitespace/reformatting.\n3. **If the diff is empty (no files changed), exit silently.** Do not append to home-session-notes.md. Do not post anything to Discord. Just stop. Keith hasn't interacted with his home Claude since the last run, so there is nothing to say.\n4. Otherwise, append a dated block to ./memory/home-session-notes.md in this format:\n\n   ## YYYY-MM-DD home-memory-sync\n   - new: <filename> — <what's new and why it matters to you>\n   - updated: <filename> — <what changed>\n   - removed: <filename> — <Keith deleted this memory>\n\n   Write the summary in YOUR OWN voice as notes-to-self, not a raw diff. You are the audience.\n5. Update the snapshot so next run's diff is accurate: `rsync -a --delete /Users/[your-github-username]/.claude/projects/-Users-[your-github-username]/memory/ ./memory/.home-memory-snapshot/`. The --delete flag is SAFE here because .home-memory-snapshot/ is your private workspace, not your real memory.\n6. Post a brief Discord summary manually via `node /workspace/scripts/discord-post.js YOUR_CHANNEL_ID \"home-memory-sync: <N> files changed — <one-line highlight>\"`. Only post if step 4 actually wrote changes. This cron has `announceResult: false` so nothing is auto-posted — silence on no-change runs is intentional.\n\nThis runs nightly so you stay aware of anything Keith worked on in his home (non-Discord) Claude Code sessions."
     },
     {
-      "id": "vetware-proposals-manager",
+      "id": "[your-project]-proposals-manager",
       "name": "[Your Project] — Proposals Manager (daily)",
       "schedule": "0 10 * * *",
       "tz": "America/New_York",
@@ -330,7 +330,7 @@
       "message": "You are the Proposals Manager in the [Your Project] autonomous dev system. Read your full instructions at ./[your-project]/research/agents/prompts/proposals-manager.md and follow them exactly. Review all open proposals in [your-project]/research/agents/proposals.md, decide accept/reject/defer for each, add accepted feature proposals to the roadmap, file PRD requests, and post a summary to Discord channel #proposal-follow-ups."
     },
     {
-      "id": "vetware-keith-digest",
+      "id": "[your-project]-keith-digest",
       "name": "[Your Project] — Keith Decisions Digest (daily 8am ET)",
       "schedule": "0 8 * * *",
       "tz": "America/New_York",
@@ -344,7 +344,7 @@
       "message": "Read [your-project]/research/agents/proposals.md. Find every open proposal block that is NOT tagged [ACCEPTED], [REJECTED], [RESOLVED], [SUPERSEDED], or [DEFERRED] AND that names Keith as the decision-maker — look for phrases like 'Keith go/no-go', 'awaiting Keith', 'Keith to answer', 'TRD-blocker', 'Keith should decide', 'Keith decision needed', 'Keith input', 'Keith confirmation'. Do NOT include blocks tagged with any resolved status or informational PM NOTICE / System Reviewer blocks. Produce a single Discord post to channel YOUR_CHANNEL_ID in this format:\n\n📋 Keith Decisions Digest — YYYY-MM-DD\n<one bullet per open blocker: goal ID + one-sentence question summary>\n\nIf there are zero open Keith-gated blockers, exit silently without posting. Keep the post under 2000 characters."
     },
     {
-      "id": "vetware-auto-unblock",
+      "id": "[your-project]-auto-unblock",
       "name": "[Your Project] — Auto-Unblock (every 30 min, stall-gated)",
       "schedule": "14,44 * * * *",
       "tz": "America/New_York",
