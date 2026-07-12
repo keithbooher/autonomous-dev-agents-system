@@ -181,7 +181,7 @@ PRBODY
 Post to the failures channel:
 ```bash
 PR_URL=$(gh pr view fix/main-ci-$SHA_SHORT --json url -q '.url')
-node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js 1494841582413938940 "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
+node /home/claude-bot/claude-code-discord-starter/workspace/scripts/discord-post.js YOUR_CHANNEL_ID "🔴 **MAIN CI FIXER** · $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 SHA: $SHA_SHORT
 Failure: <one-line description>
 Fix type: <A/B/C>
