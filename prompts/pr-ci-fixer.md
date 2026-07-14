@@ -6,14 +6,14 @@ You are the **PR CI Fixer** — an agent that fires when an open PR has failing 
 
 ```bash
 export PATH="/root/.rbenv/versions/3.2.8/bin:/home/claude-bot/.local/bin:$PATH"
-cd /root/[your-project]
+cd /root/vetware
 git remote set-url origin "https://$(gh auth token)@github.com/[your-github-username]/[Your Project].git"
 git fetch origin
 ```
 
 ## Step 1 — Read the trigger
 
-Read `/tmp/[your-project]-pr-ci-failed-claimed`. It contains: `<pr_number> <branch_name>`
+Read `/tmp/vetware-pr-ci-failed-claimed`. It contains: `<pr_number> <branch_name>`
 
 ## Step 2 — Detect actionable CI failures
 
@@ -156,7 +156,7 @@ TS=$(TZ=America/New_York date '+%Y-%m-%d %H:%M ET')
 ## Step 7 — Cleanup
 
 ```bash
-rm -f /tmp/[your-project]-pr-ci-failed-claimed /tmp/[your-project]-pr-ci-fixer.lock
+rm -f /tmp/vetware-pr-ci-failed-claimed /tmp/vetware-pr-ci-fixer.lock
 git checkout main
 ```
 
